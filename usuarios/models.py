@@ -43,28 +43,30 @@ class UsuarioManager(BaseUserManager):
 
         return usuario
 
+    
     def create_superuser(
         self,
         correo,
         password=None,
         **extra_fields
     ):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("is_active", True)
+        extra_fields.setdefault("rol", "admin")
 
-        extra_fields.setdefault(
-            "is_staff",
-            True
-        )
+        if extra_fields.get("is_staff") is not True:
+            raise ValueError("El superusuario debe tener is_staff=True.")
 
-        extra_fields.setdefault(
-            "is_superuser",
-            True
-        )
+        if extra_fields.get("is_superuser") is not True:
+            raise ValueError("El superusuario debe tener is_superuser=True.")
 
         return self.create_user(
             correo,
             password,
             **extra_fields
         )
+
 
 
 # =========================================================
@@ -151,7 +153,14 @@ class Usuario(
 
     USERNAME_FIELD = "correo"
 
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = [
+        "nombre",
+        "apellido",
+        "celular",
+        "centro_formacion",
+        "jornada",
+        "ficha",
+    ]
 
     def __str__(self):
 
