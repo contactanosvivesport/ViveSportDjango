@@ -1,0 +1,564 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ViveSport | Detalle del resultado</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f8;
+            color: #1f2937;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            min-width: 250px;
+            background: #004F3F;
+            color: white;
+            padding: 25px 18px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo img {
+            width: 150px;
+            max-width: 100%;
+            display: block;
+            margin: 0 auto 12px;
+        }
+
+        .logo span {
+            font-size: 12px;
+            opacity: 0.75;
+        }
+
+        .menu-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            opacity: 0.65;
+            margin: 0 12px 12px;
+        }
+
+        .menu {
+            list-style: none;
+        }
+
+        .menu li {
+            margin-bottom: 6px;
+        }
+
+        .menu a {
+            display: block;
+            padding: 12px 14px;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background: #0a6755;
+        }
+
+        .logout {
+            margin-top: auto;
+            padding-top: 25px;
+        }
+
+        .logout a {
+            display: block;
+            padding: 12px 14px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.08);
+            color: white;
+            text-decoration: none;
+        }
+
+        .main {
+            flex: 1;
+            min-width: 0;
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .topbar h1 {
+            font-size: 25px;
+        }
+
+        .admin-info {
+            text-align: right;
+        }
+
+        .admin-info strong,
+        .admin-info span {
+            display: block;
+        }
+
+        .admin-info span {
+            margin-top: 5px;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 22px;
+        }
+
+        .panel h2 {
+            color: #004F3F;
+            font-size: 19px;
+            margin-bottom: 18px;
+        }
+
+        .match-header {
+            text-align: center;
+            border-top: 4px solid #004F3F;
+        }
+
+        .tournament-name {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .phase {
+            display: inline-block;
+            padding: 6px 11px;
+            border-radius: 20px;
+            background: #e7f3ef;
+            color: #004F3F;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .teams {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .team-name {
+            font-size: 18px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        .score {
+            color: #004F3F;
+            font-size: 34px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .match-meta {
+            margin-top: 20px;
+            color: #6b7280;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 400px;
+        }
+
+        th,
+        td {
+            padding: 13px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: #f4f6f8;
+            color: #374151;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        td {
+            font-size: 14px;
+        }
+
+        tbody tr:hover {
+            background: #f9fafb;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .yellow-card {
+            background: #fff4c2;
+            color: #805d00;
+        }
+
+        .red-card {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .empty {
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            background: #f9fafb;
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 22px;
+            color: #004F3F;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 850px) {
+            .layout {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .logout {
+                margin-top: 20px;
+            }
+
+            .main {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .admin-info {
+                text-align: left;
+            }
+
+            .panel {
+                padding: 17px;
+            }
+
+            .teams {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .score {
+                font-size: 29px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="layout">
+
+    <aside class="sidebar">
+        <div class="logo">
+            <img
+                src="{% static 'usuarios/img/logo.png' %}"
+                alt="Logo ViveSport"
+            >
+            <span>Panel administrativo</span>
+        </div>
+
+        <div class="menu-title">Administración</div>
+
+        <ul class="menu">
+            <li>
+                <a href="{% url 'admin_dashboard' %}">Inicio</a>
+            </li>
+            <li>
+                <a href="{% url 'usuarios_admin' %}">Usuarios</a>
+            </li>
+            <li>
+                <a href="{% url 'equipos_admin' %}">Equipos</a>
+            </li>
+            <li>
+                <a href="{% url 'torneos_admin' %}">Torneos</a>
+            </li>
+            <li>
+                <a href="{% url 'inscripciones_admin' %}">Inscripciones</a>
+            </li>
+            <li>
+                <a href="{% url 'configuraciones_competicion' %}">Competición</a>
+            </li>
+            <li>
+                <a href="{% url 'partidos_torneos_admin' %}">Partidos</a>
+            </li>
+            <li>
+                <a href="{% url 'grupos_admin' %}">Grupos</a>
+            </li>
+            <li>
+                <a href="{% url 'resultados_admin' %}" class="active">
+                    Resultados
+                </a>
+            </li>
+        </ul>
+
+        <div class="logout">
+            <a href="{% url 'logout' %}">Cerrar sesión</a>
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <div class="topbar">
+            <h1>Detalle del partido</h1>
+
+            <div class="admin-info">
+                <strong>{{ user.nombre }} {{ user.apellido }}</strong>
+                <span>{{ user.correo }}</span>
+            </div>
+        </div>
+
+        <a
+            class="back-link"
+            href="{% url 'resultados_admin' %}?torneo={{ partido.torneo_id }}"
+        >
+            ← Volver a resultados
+        </a>
+
+        <!-- INFORMACIÓN DEL ENCUENTRO -->
+
+        <section class="panel match-header">
+            <p class="tournament-name">
+                {{ partido.torneo.nombre }}
+            </p>
+
+            {% if partido.fase %}
+                <span class="phase">
+                    {{ partido.fase.get_tipo_display }}
+                </span>
+            {% elif partido.grupo %}
+                <span class="phase">
+                    {{ partido.grupo }}
+                </span>
+            {% endif %}
+
+            <div class="teams">
+                <div class="team-name">
+                    {{ partido.equipo_local.nombre }}
+                </div>
+
+                <div class="score">
+                    {{ partido.resultado.marcador_local }}
+                    -
+                    {{ partido.resultado.marcador_visitante }}
+                </div>
+
+                <div class="team-name">
+                    {{ partido.equipo_visitante.nombre }}
+                </div>
+            </div>
+
+            <div class="match-meta">
+                <p>Partido número {{ partido.numero }}</p>
+
+                {% if partido.jornada %}
+                    <p>Jornada {{ partido.jornada }}</p>
+                {% endif %}
+
+                {% if partido.fecha %}
+                    <p>Fecha: {{ partido.fecha|date:"d/m/Y" }}</p>
+                {% endif %}
+
+                {% if partido.hora %}
+                    <p>Hora: {{ partido.hora|time:"H:i" }}</p>
+                {% endif %}
+
+                <p>Estado: {{ partido.get_estado_display }}</p>
+            </div>
+        </section>
+
+        <!-- JUGADORES PARTICIPANTES -->
+
+        <section class="panel">
+            <h2>Jugadores que participaron</h2>
+
+            {% if participaciones %}
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Jugador</th>
+                                <th>Equipo</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for participacion in participaciones %}
+                                <tr>
+                                    <td>
+                                        {{ participacion.jugador.nombre }}
+                                        {{ participacion.jugador.apellido }}
+                                    </td>
+
+                                    <td>
+                                        {{ participacion.equipo.nombre }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty">
+                    No hay jugadores registrados como participantes
+                    de este partido.
+                </div>
+            {% endif %}
+        </section>
+
+        <!-- GOLES -->
+
+        {% if es_futbol %}
+            <section class="panel">
+                <h2>Goles del partido</h2>
+
+                {% if goles %}
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Jugador</th>
+                                    <th>Equipo</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for gol in goles %}
+                                    <tr>
+                                        <td>
+                                            {{ gol.jugador.nombre }}
+                                            {{ gol.jugador.apellido }}
+                                        </td>
+
+                                        <td>{{ gol.equipo.nombre }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="empty">
+                        No hay goles individuales registrados para este partido.
+                    </div>
+                {% endif %}
+            </section>
+        {% endif %}
+
+        <!-- TARJETAS -->
+
+        <section class="panel">
+            <h2>Tarjetas del partido</h2>
+
+            {% if tarjetas %}
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Jugador</th>
+                                <th>Equipo</th>
+                                <th>Tipo</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for tarjeta in tarjetas %}
+                                <tr>
+                                    <td>
+                                        {{ tarjeta.jugador.nombre }}
+                                        {{ tarjeta.jugador.apellido }}
+                                    </td>
+
+                                    <td>{{ tarjeta.equipo.nombre }}</td>
+
+                                    <td>
+                                        {% if tarjeta.tipo == "amarilla" %}
+                                            <span class="badge yellow-card">
+                                                Amarilla
+                                            </span>
+                                        {% else %}
+                                            <span class="badge red-card">
+                                                Roja
+                                            </span>
+                                        {% endif %}
+                                    </td>
+
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty">
+                    No hay tarjetas registradas para este partido.
+                </div>
+            {% endif %}
+        </section>
+
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,512 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+    ViveSport | Programar partido
+</title>
+
+<style>
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: "Segoe UI", sans-serif;
+        background-color: #f5f5f5;
+        min-height: 100vh;
+        display: flex;
+    }
+
+    /* =====================================================
+       BARRA LATERAL
+       ===================================================== */
+
+    .sidebar {
+        width: 250px;
+        background-color: #004F3F;
+        color: white;
+        min-height: 100vh;
+        padding: 30px 20px;
+    }
+
+    .logo {
+        text-align: center;
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 40px;
+    }
+
+    .menu {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .menu a {
+        text-decoration: none;
+        color: white;
+        padding: 12px 15px;
+        border-radius: 8px;
+        transition: 0.2s;
+    }
+
+    .menu a:hover {
+        background-color: #0a6755;
+    }
+
+    .logout {
+        margin-top: 30px;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        padding-top: 20px;
+    }
+
+    /* =====================================================
+       CONTENIDO
+       ===================================================== */
+
+    .contenido {
+        flex: 1;
+        padding: 40px;
+    }
+
+    .encabezado {
+        margin-bottom: 30px;
+    }
+
+    .encabezado h1 {
+        color: #004F3F;
+        margin-bottom: 8px;
+    }
+
+    .encabezado p {
+        color: #666;
+    }
+
+    /* =====================================================
+       TARJETA DEL PARTIDO
+       ===================================================== */
+
+    .tarjeta {
+        max-width: 700px;
+        background-color: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .informacion-partido {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+        margin-bottom: 30px;
+    }
+
+    .dato {
+        background-color: #f5f5f5;
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+    .dato strong {
+        display: block;
+        color: #004F3F;
+        margin-bottom: 5px;
+    }
+
+    .dato span {
+        color: #444;
+    }
+
+    /* =====================================================
+       FORMULARIO
+       ===================================================== */
+
+    .formulario {
+        border-top: 1px solid #ddd;
+        padding-top: 25px;
+    }
+
+    .campo {
+        margin-bottom: 20px;
+    }
+
+    .campo label {
+        display: block;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .campo input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 15px;
+    }
+
+    .campo input:focus {
+        outline: none;
+        border-color: #004F3F;
+    }
+
+    .ayuda {
+        margin-top: 6px;
+        color: #777;
+        font-size: 13px;
+    }
+
+    .errores {
+        background-color: #ffe5e5;
+        color: #a00000;
+        padding: 12px 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .error-campo {
+        color: #a00000;
+        font-size: 13px;
+        margin-top: 5px;
+    }
+
+    /* =====================================================
+       BOTONES
+       ===================================================== */
+
+    .acciones {
+        display: flex;
+        gap: 12px;
+        margin-top: 25px;
+    }
+
+    .boton {
+        display: inline-block;
+        border: none;
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    .boton-programar {
+        background-color: #004F3F;
+        color: white;
+    }
+
+    .boton-programar:hover {
+        background-color: #0a6755;
+    }
+
+    .boton-cancelar {
+        background-color: #ddd;
+        color: #333;
+    }
+
+    .boton-cancelar:hover {
+        background-color: #ccc;
+    }
+
+    /* =====================================================
+       RESPONSIVE
+       ===================================================== */
+
+    @media (max-width: 768px) {
+
+        body {
+            flex-direction: column;
+        }
+
+        .sidebar {
+            width: 100%;
+            min-height: auto;
+        }
+
+        .contenido {
+            padding: 25px;
+        }
+
+        .informacion-partido {
+            grid-template-columns: 1fr;
+        }
+
+        .acciones {
+            flex-direction: column;
+        }
+
+    }
+
+</style>
+
+
+</head>
+
+<body>
+
+
+<!-- =====================================================
+     BARRA LATERAL
+     ===================================================== -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+        ViveSport
+    </div>
+
+    <nav class="menu">
+
+        <a href="#">
+            Inicio
+        </a>
+
+        <a href="#">
+            Usuarios
+        </a>
+
+        <a href="#">
+            Torneos
+        </a>
+
+        <a href="#">
+            Inscripciones
+        </a>
+
+        <a href="#">
+            Competición
+        </a>
+
+        <div class="logout">
+
+            <a href="{% url 'logout' %}">
+                Cerrar sesión
+            </a>
+
+        </div>
+
+    </nav>
+
+</aside>
+
+
+<!-- =====================================================
+     CONTENIDO PRINCIPAL
+     ===================================================== -->
+
+<main class="contenido">
+
+    <div class="encabezado">
+
+        <h1>
+            Programar partido
+        </h1>
+
+        <p>
+            Configura la fecha y hora en la que se disputará el partido.
+        </p>
+
+    </div>
+
+
+    <section class="tarjeta">
+
+        <!-- =================================================
+             INFORMACIÓN DEL PARTIDO
+             ================================================= -->
+
+        <div class="informacion-partido">
+
+            <div class="dato">
+
+                <strong>
+                    Torneo
+                </strong>
+
+                <span>
+                    {{ partido.torneo.nombre }}
+                </span>
+
+            </div>
+
+
+            <div class="dato">
+
+                <strong>
+                    Partido
+                </strong>
+
+                <span>
+                    #{{ partido.numero }}
+                </span>
+
+            </div>
+
+
+            <div class="dato">
+
+                <strong>
+                    Grupo
+                </strong>
+
+                <span>
+                    {{ partido.grupo.nombre }}
+                </span>
+
+            </div>
+
+
+            <div class="dato">
+
+                <strong>
+                    Fecha de inicio del torneo
+                </strong>
+
+                <span>
+                    {{ partido.torneo.fecha_inicio|date:"d/m/Y" }}
+                </span>
+
+            </div>
+
+
+            <div class="dato">
+
+                <strong>
+                    Equipo local
+                </strong>
+
+                <span>
+                    {{ partido.equipo_local.nombre }}
+                </span>
+
+            </div>
+
+
+            <div class="dato">
+
+                <strong>
+                    Equipo visitante
+                </strong>
+
+                <span>
+                    {{ partido.equipo_visitante.nombre }}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             FORMULARIO
+             ================================================= -->
+
+        <form
+            method="POST"
+            class="formulario"
+        >
+
+            {% csrf_token %}
+
+
+            {% if form.non_field_errors %}
+
+                <div class="errores">
+
+                    {{ form.non_field_errors }}
+
+                </div>
+
+            {% endif %}
+
+
+            <div class="campo">
+
+                {{ form.fecha.label_tag }}
+
+                {{ form.fecha }}
+
+                {% if form.fecha.errors %}
+
+                    <div class="error-campo">
+
+                        {{ form.fecha.errors }}
+
+                    </div>
+
+                {% endif %}
+
+                <div class="ayuda">
+
+                    La fecha debe ser posterior a la fecha de inicio del torneo.
+
+                </div>
+
+            </div>
+
+
+            <div class="campo">
+
+                {{ form.hora.label_tag }}
+
+                {{ form.hora }}
+
+                {% if form.hora.errors %}
+
+                    <div class="error-campo">
+
+                        {{ form.hora.errors }}
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="acciones">
+
+                <button
+                    type="submit"
+                    class="boton boton-programar"
+                >
+                    Programar partido
+                </button>
+
+
+                <a
+                    href="{% url 'partidos_admin' partido.torneo.id %}"
+                    class="boton boton-cancelar"
+                >
+                    Cancelar
+                </a>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</main>
+
+
+</body>
+
+</html>

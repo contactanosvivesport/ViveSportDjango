@@ -1,0 +1,591 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
+
+
+:root {
+
+    --verde: #004F3F;
+    --verde-oscuro: #00382D;
+
+    --naranja: #FF7A4A;
+
+    --blanco: #FFFFFF;
+
+    --fondo: #F5F5F5;
+
+    --texto: #1F2937;
+
+    --gris: #6B7280;
+
+    --borde: #D1D5DB;
+
+    --error: #DC2626;
+
+}
+
+
+/* =========================
+   RESET
+========================= */
+
+* {
+
+    margin: 0;
+    padding: 0;
+
+    box-sizing: border-box;
+
+}
+
+
+body {
+
+    font-family: "Poppins", sans-serif;
+
+    min-height: 100vh;
+
+    background: var(--fondo);
+
+}
+
+
+/* =========================
+   CONTENEDOR PRINCIPAL
+========================= */
+
+.auth-page {
+
+    min-height: 100vh;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 30px;
+
+    background:
+
+        radial-gradient(
+            circle at top left,
+            rgba(0, 79, 63, 0.12),
+            transparent 35%
+        ),
+
+        radial-gradient(
+            circle at bottom right,
+            rgba(255, 122, 74, 0.12),
+            transparent 35%
+        ),
+
+        var(--fondo);
+
+}
+
+
+/* =========================
+   TARJETA
+========================= */
+
+.auth-card {
+
+    width: 100%;
+
+    max-width: 450px;
+
+    padding: 45px;
+
+    background: var(--blanco);
+
+    border-radius: 24px;
+
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.10);
+
+}
+
+
+/* =========================
+   MARCA
+========================= */
+
+.brand {
+
+    text-align: center;
+
+    margin-bottom: 35px;
+
+}
+
+
+.brand-logo {
+
+    width: 110px;
+
+    height: 110px;
+
+    object-fit: contain;
+
+    margin-bottom: 8px;
+
+}
+
+
+.brand h1 {
+
+    font-family: "Kanit", sans-serif;
+
+    font-size: 38px;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+
+    color: var(--verde);
+
+}
+
+
+.brand span {
+
+    display: block;
+
+    margin-top: 2px;
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+    letter-spacing: 1.5px;
+
+    color: var(--naranja);
+
+}
+
+
+/* =========================
+   TÍTULO
+========================= */
+
+.auth-title {
+
+    margin-bottom: 25px;
+
+}
+
+
+.auth-title h2 {
+
+    font-family: "Kanit", sans-serif;
+
+    font-size: 28px;
+
+    font-weight: 600;
+
+    color: var(--texto);
+
+}
+
+
+.auth-title p {
+
+    margin-top: 3px;
+
+    font-size: 13px;
+
+    color: var(--gris);
+
+}
+
+
+/* =========================
+   ERROR
+========================= */
+
+.alert-error {
+
+    margin-bottom: 20px;
+
+    padding: 12px 14px;
+
+    border-radius: 9px;
+
+    background: #FEF2F2;
+
+    border: 1px solid #FECACA;
+
+    color: var(--error);
+
+    font-size: 13px;
+
+}
+
+
+/* =========================
+   CAMPOS
+========================= */
+
+.input-group {
+
+    margin-bottom: 20px;
+
+}
+
+
+.input-group label {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-size: 13px;
+
+    font-weight: 500;
+
+    color: var(--texto);
+
+}
+
+
+.input-group input {
+
+    width: 100%;
+
+    height: 52px;
+
+    padding: 0 15px;
+
+    border: 1px solid var(--borde);
+
+    border-radius: 10px;
+
+    background: var(--blanco);
+
+    font-family: "Poppins", sans-serif;
+
+    font-size: 13px;
+
+    color: var(--texto);
+
+    outline: none;
+
+    transition: all 0.2s ease;
+
+}
+
+
+.input-group input::placeholder {
+
+    color: #9CA3AF;
+
+}
+
+
+.input-group input:focus {
+
+    border-color: var(--verde);
+
+    box-shadow:
+        0 0 0 3px rgba(0, 79, 63, 0.10);
+
+}
+
+
+/* =========================
+   CONTRASEÑA
+========================= */
+
+.password-container {
+
+    position: relative;
+
+}
+
+
+.password-container input {
+
+    padding-right: 75px;
+
+}
+
+
+.toggle-password {
+
+    position: absolute;
+
+    right: 12px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    border: none;
+
+    background: transparent;
+
+    color: var(--verde);
+
+    font-family: "Poppins", sans-serif;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+}
+
+
+.toggle-password:hover {
+
+    color: var(--naranja);
+
+}
+
+
+/* =========================
+   BOTÓN
+========================= */
+
+.btn-login {
+
+    width: 100%;
+
+    height: 52px;
+
+    margin-top: 5px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: var(--verde);
+
+    color: var(--blanco);
+
+    font-family: "Kanit", sans-serif;
+
+    font-size: 17px;
+
+    font-weight: 600;
+
+    letter-spacing: 0.8px;
+
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+
+}
+
+
+.btn-login:hover {
+
+    background: var(--verde-oscuro);
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 20px rgba(0, 79, 63, 0.20);
+
+}
+
+
+/* =========================
+   REGISTRO
+========================= */
+
+.auth-register {
+
+    margin-top: 28px;
+
+    padding-top: 22px;
+
+    border-top: 1px solid #E5E7EB;
+
+    text-align: center;
+
+    font-size: 13px;
+
+    color: var(--gris);
+
+}
+
+
+.auth-register a {
+
+    margin-left: 5px;
+
+    color: var(--verde);
+
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition: 0.2s;
+
+}
+
+
+.auth-register a:hover {
+
+    color: var(--naranja);
+
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 600px) {
+
+    .auth-page {
+
+        padding: 18px;
+
+    }
+
+
+    .auth-card {
+
+        padding: 32px 24px;
+
+        border-radius: 18px;
+
+    }
+
+
+    .brand-logo {
+
+        width: 90px;
+
+        height: 90px;
+
+    }
+
+
+    .brand h1 {
+
+        font-size: 32px;
+
+    }
+
+
+    .auth-title h2 {
+
+        font-size: 25px;
+
+    }
+
+}
+/* =========================
+   REGISTRO
+========================= */
+
+.register-card {
+
+    max-width: 720px;
+
+}
+
+
+.form-row {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 18px;
+
+}
+
+
+.field-error {
+
+    margin-top: 6px;
+
+    color: var(--error);
+
+    font-size: 11px;
+
+    line-height: 1.4;
+
+}
+
+
+/* =========================
+   SELECTS
+========================= */
+
+.input-group select {
+
+    width: 100%;
+
+    height: 52px;
+
+    padding: 0 15px;
+
+    border: 1px solid var(--borde);
+
+    border-radius: 10px;
+
+    background: var(--blanco);
+
+    font-family: "Poppins", sans-serif;
+
+    font-size: 13px;
+
+    color: var(--texto);
+
+    outline: none;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+
+}
+
+
+.input-group select:focus {
+
+    border-color: var(--verde);
+
+    box-shadow:
+        0 0 0 3px rgba(0, 79, 63, 0.10);
+
+}
+
+
+/* =========================
+   INPUTS DEL PASSWORD
+========================= */
+
+.password-container input {
+
+    width: 100%;
+
+}
+
+
+/* =========================
+   RESPONSIVE REGISTRO
+========================= */
+
+@media (max-width: 650px) {
+
+    .register-card {
+
+        max-width: 450px;
+
+    }
+
+
+    .form-row {
+
+        grid-template-columns: 1fr;
+
+        gap: 0;
+
+    }
+
+}

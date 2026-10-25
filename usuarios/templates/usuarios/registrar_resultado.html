@@ -1,0 +1,3232 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+    ViveSport | Registrar resultado
+</title>
+
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: "Segoe UI", sans-serif;
+        background-color: #f5f5f5;
+        color: #222;
+    }
+
+    .contenedor {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    /* =====================================================
+       SIDEBAR
+    ===================================================== */
+
+    .sidebar {
+        width: 250px;
+        background-color: #004F3F;
+        color: white;
+        padding: 30px 20px;
+        flex-shrink: 0;
+    }
+
+    .sidebar h2 {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .menu a {
+        display: block;
+        color: white;
+        text-decoration: none;
+        padding: 13px 15px;
+        border-radius: 6px;
+        margin-bottom: 8px;
+    }
+
+    .menu a:hover {
+        background-color: #0a6755;
+    }
+
+    .cerrar-sesion {
+        margin-top: 30px;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        padding-top: 20px;
+    }
+
+    .cerrar-sesion a {
+        color: white;
+        text-decoration: none;
+    }
+
+    /* =====================================================
+       CONTENIDO
+    ===================================================== */
+
+    .contenido {
+        flex: 1;
+        min-width: 0;
+        padding: 40px;
+        overflow-x: auto;
+    }
+
+    .contenido h1 {
+        color: #004F3F;
+        margin-bottom: 25px;
+    }
+
+    .tarjeta {
+        background-color: white;
+        border-radius: 10px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    /* =====================================================
+       INFORMACIÓN DEL PARTIDO
+    ===================================================== */
+
+    .informacion-partido {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .dato {
+        background-color: #f5f5f5;
+        padding: 15px;
+        border-radius: 7px;
+    }
+
+    .dato strong {
+        display: block;
+        color: #004F3F;
+        margin-bottom: 5px;
+    }
+
+    /* =====================================================
+       EQUIPOS Y MARCADOR GENERAL
+    ===================================================== */
+
+    .equipos {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 100px minmax(0, 1fr);
+        align-items: center;
+        gap: 25px;
+        margin: 30px 0;
+    }
+
+    .equipo {
+        min-width: 0;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+        color: #004F3F;
+    }
+
+    .nombre-equipo {
+        margin-bottom: 10px;
+        overflow-wrap: anywhere;
+    }
+
+    .campo-marcador {
+        margin-top: 10px;
+    }
+
+    .campo-marcador label {
+        display: block;
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 6px;
+    }
+
+    .campo-marcador input {
+        width: 100%;
+        padding: 12px;
+        font-size: 30px;
+        font-weight: bold;
+        text-align: center;
+        border: 2px solid #004F3F;
+        border-radius: 8px;
+        background-color: #f8faf9;
+        color: #004F3F;
+    }
+
+    .campo-marcador input[readonly] {
+        cursor: default;
+        background-color: #edf6f2;
+    }
+
+    .texto-automatico {
+        display: block;
+        margin-top: 6px;
+        color: #004F3F;
+        font-size: 12px;
+        font-weight: normal;
+    }
+
+    .vs {
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+        color: #777;
+    }
+
+    /* =====================================================
+       FORMULARIOS
+    ===================================================== */
+
+    .formulario {
+        max-width: 1100px;
+    }
+
+    .campo {
+        margin-bottom: 20px;
+    }
+
+    .campo label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    .campo input,
+    .campo select {
+        width: 100%;
+        padding: 11px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 15px;
+    }
+
+    .error {
+        color: #b00020;
+        margin-top: 5px;
+        font-size: 14px;
+    }
+
+    .errores-generales {
+        background-color: #ffeaea;
+        color: #b00020;
+        border: 1px solid #f0b5b5;
+        padding: 15px;
+        border-radius: 7px;
+        margin-bottom: 20px;
+    }
+
+    /* =====================================================
+       SECCIONES
+    ===================================================== */
+
+    .seccion-futbol {
+        margin-top: 35px;
+        padding-top: 5px;
+    }
+
+    .titulo-seccion {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 8px;
+    }
+
+    .titulo-seccion h2 {
+        color: #004F3F;
+        margin: 0;
+    }
+
+    .descripcion-seccion {
+        color: #6b7280;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+    /* =====================================================
+       BLOQUES GENERALES DE EQUIPOS
+    ===================================================== */
+
+    .bloques-futbol {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+    .bloque-equipo {
+        min-width: 0;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 20px;
+        background-color: #fafafa;
+    }
+
+    .bloque-equipo h3 {
+        color: #004F3F;
+        font-size: 18px;
+        margin-bottom: 5px;
+    }
+
+    .subtitulo-equipo {
+        color: #6b7280;
+        font-size: 13px;
+        margin-bottom: 18px;
+    }
+
+    /* =====================================================
+       LISTAS DINÁMICAS
+    ===================================================== */
+
+    .lista-dinamica {
+        min-height: 10px;
+    }
+
+    .fila-dinamica {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 40px;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .fila-dinamica.tarjeta-fila {
+        grid-template-columns: minmax(0, 1fr) 130px 40px;
+    }
+
+    .fila-dinamica select {
+        width: 100%;
+        min-width: 0;
+        padding: 11px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+        background-color: white;
+    }
+
+    .fila-dinamica select:focus {
+        outline: none;
+        border-color: #004F3F;
+        box-shadow: 0 0 0 2px rgba(0, 79, 63, 0.08);
+    }
+
+    /* =====================================================
+       BOTÓN ELIMINAR
+    ===================================================== */
+
+    .boton-eliminar {
+        border: none;
+        background-color: #b00020;
+        color: white;
+        width: 38px;
+        height: 38px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 18px;
+    }
+
+    .boton-eliminar:hover {
+        background-color: #8a0019;
+    }
+
+    /* =====================================================
+       BOTÓN AGREGAR
+    ===================================================== */
+
+    .boton-agregar {
+        width: 100%;
+        border: none;
+        background-color: #004F3F;
+        color: white;
+        padding: 11px 18px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    .boton-agregar:hover {
+        background-color: #0a6755;
+    }
+
+    /* =====================================================
+       SIN REGISTROS
+    ===================================================== */
+
+    .sin-registros {
+        color: #9ca3af;
+        font-size: 14px;
+        padding: 10px 0 15px;
+        text-align: center;
+    }
+
+    /* =====================================================
+       AVISO TARJETAS
+    ===================================================== */
+
+    .aviso-tarjetas {
+        background-color: #fff8e6;
+        border: 1px solid #f2d58a;
+        color: #725500;
+        border-radius: 7px;
+        padding: 12px;
+        font-size: 13px;
+        margin-bottom: 18px;
+    }
+
+    /* =====================================================
+       CONTADORES
+    ===================================================== */
+
+    .contador {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 30px;
+        height: 30px;
+        padding: 0 8px;
+        border-radius: 20px;
+        background-color: #004F3F;
+        color: white;
+        font-size: 13px;
+        font-weight: bold;
+        margin-left: 5px;
+    }
+
+    /* =====================================================
+       PARTICIPACIÓN DE JUGADORES
+    ===================================================== */
+
+    .seccion-participantes {
+        margin-top: 35px;
+        padding-top: 25px;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .seccion-participantes h2 {
+        color: #004F3F;
+        margin-bottom: 8px;
+    }
+
+    .descripcion-participantes {
+        color: #6b7280;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+    .participacion-equipos {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+    .participacion-equipo {
+        min-width: 0;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 20px;
+        background-color: #fafafa;
+    }
+
+    .participacion-equipo h3 {
+        color: #004F3F;
+        font-size: 17px;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .jugador-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        margin-bottom: 6px;
+        background-color: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: normal;
+        color: #374151;
+    }
+
+    .jugador-checkbox:hover {
+        background-color: #f3f4f6;
+    }
+
+    .jugador-checkbox input {
+        width: 17px;
+        height: 17px;
+        flex-shrink: 0;
+        cursor: pointer;
+    }
+
+    .sin-jugadores {
+        color: #6b7280;
+        font-size: 14px;
+        padding: 10px 0;
+    }
+
+    /* =====================================================
+       BOTONES PRINCIPALES
+    ===================================================== */
+
+    .acciones {
+        display: flex;
+        gap: 12px;
+        margin-top: 35px;
+    }
+
+    .boton {
+        display: inline-block;
+        border: none;
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 15px;
+    }
+
+    .boton-guardar {
+        background-color: #004F3F;
+        color: white;
+    }
+
+    .boton-guardar:hover {
+        background-color: #0a6755;
+    }
+
+    .boton-cancelar {
+        background-color: #777;
+        color: white;
+    }
+
+    .boton-cancelar:hover {
+        background-color: #555;
+    }
+
+    /* =====================================================
+       SELECTOR DEL FORMATO
+    ===================================================== */
+
+    .selector-formato {
+        display: block;
+        width: 100%;
+        min-height: 48px;
+        padding: 12px 16px;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        background-color: #ffffff;
+        color: #1f2937;
+        font-family: inherit;
+        font-size: 15px;
+        font-weight: 500;
+        cursor: pointer;
+        outline: none;
+        transition: border-color 0.2s ease,
+                    box-shadow 0.2s ease;
+    }
+
+    .selector-formato:hover {
+        border-color: #9ca3af;
+    }
+
+    .selector-formato:focus {
+        border-color: #008064;
+        box-shadow: 0 0 0 3px rgba(0, 128, 100, 0.15);
+    }
+
+    .selector-formato option {
+        padding: 10px;
+        color: #1f2937;
+        background-color: #ffffff;
+    }
+
+    /* =====================================================
+       TARJETAS PARA ELEGIR EL FORMATO
+    ===================================================== */
+
+    .campo-formato {
+        margin-top: 22px;
+        margin-bottom: 28px;
+    }
+
+    .etiqueta-formato {
+        display: block;
+        margin-bottom: 12px;
+        color: #1f2937;
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    .selector-formato-oculto {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .formatos-tarjetas {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .tarjeta-formato {
+        display: block;
+        position: relative;
+        min-width: 0;
+        cursor: pointer;
+    }
+
+    .tarjeta-formato input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .contenido-tarjeta-formato {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        min-height: 100px;
+        padding: 18px;
+        background: #ffffff;
+        border: 2px solid #e5e7eb;
+        border-radius: 14px;
+        transition: border-color 0.2s ease,
+                    background-color 0.2s ease,
+                    box-shadow 0.2s ease;
+    }
+
+    .tarjeta-formato:hover .contenido-tarjeta-formato {
+        border-color: #9ca3af;
+    }
+
+    .tarjeta-formato input:checked + .contenido-tarjeta-formato {
+        border-color: #008064;
+        background: #f0faf6;
+        box-shadow: 0 0 0 3px rgba(0, 128, 100, 0.10);
+    }
+
+    .tarjeta-formato input:focus-visible + .contenido-tarjeta-formato {
+        outline: 3px solid rgba(0, 128, 100, 0.25);
+        outline-offset: 3px;
+    }
+
+    .numero-formato {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+        background: #f3f4f6;
+        color: #374151;
+        font-size: 23px;
+        font-weight: 800;
+    }
+
+    .tarjeta-formato input:checked + .contenido-tarjeta-formato .numero-formato {
+        background: #008064;
+        color: #ffffff;
+    }
+
+    .texto-formato {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        gap: 6px;
+        min-width: 0;
+    }
+
+    .texto-formato strong {
+        color: #1f2937;
+        font-size: 14px;
+    }
+
+    .texto-formato small {
+        color: #6b7280;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .check-formato {
+        display: none;
+        color: #008064;
+        font-size: 20px;
+        font-weight: 800;
+    }
+
+    .tarjeta-formato input:checked + .contenido-tarjeta-formato .check-formato {
+        display: inline;
+    }
+
+    /* =====================================================
+       DISEÑO DE LOS MARCADORES POR SET
+    ===================================================== */
+
+    .bloque-set {
+        margin: 24px 0;
+        padding: 24px;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 18px;
+        box-shadow: 0 5px 18px rgba(15, 23, 42, 0.05);
+    }
+
+    .bloque-set[hidden] {
+        display: none !important;
+    }
+
+    .bloque-set h3 {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 24px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #e5e7eb;
+        color: #111827;
+        font-size: 18px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+    }
+
+    .bloque-set h3::before {
+        content: "";
+        display: inline-block;
+        width: 5px;
+        height: 24px;
+        border-radius: 5px;
+        background: #008064;
+    }
+
+    .bloque-set .bloques-futbol {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+    .bloque-set .bloque-equipo {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        min-width: 0;
+        padding: 18px;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+    }
+
+    .bloque-set .bloque-equipo label {
+        display: block;
+        min-height: 40px;
+        margin: 0;
+        color: #374151;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1.5;
+        overflow-wrap: anywhere;
+    }
+
+    /* Marcadores digitales para escribir los puntos */
+
+    .bloque-set .bloque-equipo input[type="number"] {
+        box-sizing: border-box;
+        display: block;
+        width: 100%;
+        min-height: 82px;
+        padding: 12px;
+        border: 2px solid #d1e7df;
+        border-radius: 16px;
+        background: linear-gradient(180deg, #ffffff 0%, #f0faf6 100%);
+        color: #006b52;
+        font-family: inherit;
+        font-size: 36px;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+        text-align: center;
+        outline: none;
+        box-shadow: 0 4px 10px rgba(0, 107, 82, 0.06);
+        transition: border-color 0.2s ease,
+                    box-shadow 0.2s ease,
+                    background 0.2s ease,
+                    transform 0.2s ease;
+    }
+
+    .bloque-set .bloque-equipo input[type="number"]:focus {
+        border-color: #008064;
+        background: #ffffff;
+        box-shadow: 0 0 0 4px rgba(0, 128, 100, 0.14);
+        transform: translateY(-2px);
+    }
+
+    .bloque-set .bloque-equipo input[type="number"]:hover {
+        border-color: #70b9a4;
+    }
+
+    #estado-partido-sets {
+        margin-top: 18px;
+        padding: 12px 16px;
+        border-radius: 10px;
+        color: #374151;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    /* =====================================================
+       RESPONSIVE: TABLET
+    ===================================================== */
+
+    @media (max-width: 900px) {
+        .bloques-futbol {
+            grid-template-columns: 1fr;
+        }
+
+        .equipos {
+            grid-template-columns: minmax(0, 1fr) 70px minmax(0, 1fr);
+            gap: 15px;
+        }
+
+        .contenido {
+            padding: 28px;
+        }
+    }
+
+    /* =====================================================
+       RESPONSIVE: MÓVILES
+    ===================================================== */
+
+    @media (max-width: 768px) {
+        .contenedor {
+            flex-direction: column;
+        }
+
+        .sidebar {
+            width: 100%;
+        }
+
+        .contenido {
+            padding: 20px;
+        }
+
+        .equipos {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .vs {
+            margin: 5px 0;
+        }
+
+        .participacion-equipos {
+            grid-template-columns: 1fr;
+        }
+
+        .bloques-futbol {
+            grid-template-columns: 1fr;
+        }
+
+        .fila-dinamica.tarjeta-fila {
+            grid-template-columns: 1fr;
+        }
+
+        .acciones {
+            flex-direction: column;
+        }
+
+        .boton {
+            text-align: center;
+        }
+
+        .formatos-tarjetas {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .contenido-tarjeta-formato {
+            min-height: 88px;
+            padding: 14px;
+        }
+
+        .bloque-set {
+            padding: 16px;
+            border-radius: 14px;
+        }
+
+        .bloque-set .bloques-futbol {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .bloque-set .bloque-equipo {
+            padding: 14px;
+        }
+
+        .bloque-set .bloque-equipo label {
+            min-height: auto;
+        }
+
+        .bloque-set .bloque-equipo input[type="number"] {
+            min-height: 72px;
+            font-size: 32px;
+        }
+    }
+</style>
+
+
+</head>
+
+
+<body>
+
+<div class="contenedor">
+
+
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
+
+    <aside class="sidebar">
+
+        <h2>
+            ViveSport
+        </h2>
+
+        <nav class="menu">
+
+            <a href="{% url 'admin_dashboard' %}">
+                Inicio
+            </a>
+
+            <a href="{% url 'torneos_admin' %}">
+                Torneos
+            </a>
+
+        </nav>
+
+        <div class="cerrar-sesion">
+
+            <a href="{% url 'logout' %}">
+                Cerrar sesión
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         CONTENIDO
+         ===================================================== -->
+
+    <main class="contenido">
+
+        <h1>
+            Registrar resultado
+        </h1>
+
+
+        <div class="tarjeta">
+
+
+            <!-- =================================================
+                 INFORMACIÓN DEL PARTIDO
+                 ================================================= -->
+
+            <div class="informacion-partido">
+
+                <div class="dato">
+
+                    <strong>
+                        Torneo
+                    </strong>
+
+                    {{ partido.torneo.nombre }}
+
+                </div>
+
+
+                <div class="dato">
+
+                    <strong>
+                        Deporte
+                    </strong>
+
+                    {{ partido.torneo.get_deporte_display }}
+
+                </div>
+
+
+                <div class="dato">
+
+                    <strong>
+                        Partido
+                    </strong>
+
+                    {{ partido.numero }}
+
+                </div>
+
+
+                <div class="dato">
+
+                    <strong>
+                        Grupo
+                    </strong>
+
+                    {% if partido.grupo %}
+                        {{ partido.grupo.nombre }}
+                    {% else %}
+                        —
+                    {% endif %}
+
+                </div>
+
+
+                <div class="dato">
+
+                    <strong>
+                        Fecha
+                    </strong>
+
+                    {{ partido.fecha }}
+
+                </div>
+
+
+                <div class="dato">
+
+                    <strong>
+                        Hora
+                    </strong>
+
+                    {{ partido.hora|date:"H:i" }}
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 FORMULARIO
+                 ================================================= -->
+
+            <form
+                method="POST"
+                class="formulario"
+                id="formulario-resultado"
+            >
+
+                {% csrf_token %}
+
+
+                <!-- =================================================
+                     ERRORES GENERALES
+                     ================================================= -->
+
+                {% if form.non_field_errors %}
+
+                    <div class="errores-generales">
+
+                        {% for error in form.non_field_errors %}
+
+                            <div>
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+                <!-- =================================================
+                     JUGADORES PARTICIPANTES
+                     ================================================= -->
+
+                <div class="seccion-participantes">
+
+                    <h2>
+                        Jugadores participantes
+                    </h2>
+
+                    <p class="descripcion-participantes">
+
+    Selecciona los jugadores que participaron
+    en el partido.
+
+    {% if es_futbol %}
+
+        Selecciona primero los participantes.
+        Solo ellos podrán registrar goles o recibir tarjetas.
+
+    {% elif es_deporte_sets %}
+
+        Marca los jugadores que participaron en el encuentro.
+        El resultado se registrará por sets.
+
+    {% endif %}
+
+</p>
+
+
+                    <div class="participacion-equipos">
+
+
+                        <!-- =================================================
+                             LOCAL
+                             ================================================= -->
+
+                        <div class="participacion-equipo">
+
+                            <h3>
+                                {{ partido.equipo_local.nombre }}
+                            </h3>
+
+
+                            {% for jugador in jugadores_local %}
+
+                                <label class="jugador-checkbox">
+
+                                    <input
+                                        type="checkbox"
+                                        name="jugadores_local"
+                                        value="{{ jugador.id }}"
+
+                                        {% if jugador.id in participantes_local_seleccionados %}
+                                            checked
+                                        {% endif %}
+                                    >
+
+                                    <span>
+                                        {{ jugador.nombre }}
+                                        {{ jugador.apellido }}
+                                    </span>
+
+                                </label>
+
+                            {% empty %}
+
+                                <p class="sin-jugadores">
+                                    Este equipo no tiene jugadores
+                                    registrados.
+                                </p>
+
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- =================================================
+                             VISITANTE
+                             ================================================= -->
+
+                        <div class="participacion-equipo">
+
+                            <h3>
+                                {{ partido.equipo_visitante.nombre }}
+                            </h3>
+
+
+                            {% for jugador in jugadores_visitante %}
+
+                                <label class="jugador-checkbox">
+
+                                    <input
+                                        type="checkbox"
+                                        name="jugadores_visitante"
+                                        value="{{ jugador.id }}"
+
+                                        {% if jugador.id in participantes_visitante_seleccionados %}
+                                            checked
+                                        {% endif %}
+                                    >
+
+                                    <span>
+                                        {{ jugador.nombre }}
+                                        {{ jugador.apellido }}
+                                    </span>
+
+                                </label>
+
+                            {% empty %}
+
+                                <p class="sin-jugadores">
+                                    Este equipo no tiene jugadores
+                                    registrados.
+                                </p>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     EQUIPOS Y MARCADOR
+                     ================================================= -->
+                {% if not es_deporte_sets %}
+                <div class="equipos">
+
+
+                    <!-- =================================================
+                         EQUIPO LOCAL
+                         ================================================= -->
+
+                    <div class="equipo">
+
+                        <div class="nombre-equipo">
+                            {{ partido.equipo_local.nombre }}
+                        </div>
+
+                        <div class="campo-marcador">
+
+                            <label
+                                for="{{ form.marcador_local.id_for_label }}"
+                            >
+
+                                {% if es_futbol %}
+                                    Marcador automático
+                                {% else %}
+                                    Marcador
+                                {% endif %}
+
+                            </label>
+
+                            {{ form.marcador_local }}
+
+                            {% if es_futbol %}
+
+                                <span class="texto-automatico">
+                                    Se actualiza con los goles registrados.
+                                </span>
+
+                            {% endif %}
+
+                            {% for error in form.marcador_local.errors %}
+
+                                <div class="error">
+                                    {{ error }}
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         VS
+                         ================================================= -->
+
+                    <div class="vs">
+                        VS
+                    </div>
+
+
+                    <!-- =================================================
+                         EQUIPO VISITANTE
+                         ================================================= -->
+
+                    <div class="equipo">
+
+                        <div class="nombre-equipo">
+                            {{ partido.equipo_visitante.nombre }}
+                        </div>
+
+                        <div class="campo-marcador">
+
+                            <label
+                                for="{{ form.marcador_visitante.id_for_label }}"
+                            >
+
+                                {% if es_futbol %}
+                                    Marcador automático
+                                {% else %}
+                                    Marcador
+                                {% endif %}
+
+                            </label>
+
+                            {{ form.marcador_visitante }}
+
+                            {% if es_futbol %}
+
+                                <span class="texto-automatico">
+                                    Se actualiza con los goles registrados.
+                                </span>
+
+                            {% endif %}
+
+                            {% for error in form.marcador_visitante.errors %}
+
+                                <div class="error">
+                                    {{ error }}
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {% endif %}
+
+{% if es_deporte_sets %}
+
+    <section class="seccion-sets">
+
+        <div class="titulo-seccion">
+            <h2>Resultado del partido</h2>
+        </div>
+
+        <p class="descripcion-seccion">
+            Selecciona el formato y registra los puntos de cada set.
+            El partido termina automáticamente cuando un equipo gana
+            los sets necesarios.
+        </p>
+
+        
+<div class="campo-formulario campo-formato">
+
+    <label class="etiqueta-formato">
+        Formato del partido
+    </label>
+
+    <!-- Selector original, conservado para el JavaScript existente -->
+    <select
+        id="sets_programados"
+        name="sets_programados"
+        class="selector-formato-oculto"
+        required
+        aria-label="Formato del partido"
+    >
+        <option value="">Selecciona el formato</option>
+
+        <option
+            value="3"
+            {% if sets_programados_iniciales == "3" %}selected{% endif %}
+        >
+            Mejor de 3 sets
+        </option>
+
+        <option
+            value="5"
+            {% if sets_programados_iniciales == "5" %}selected{% endif %}
+        >
+            Mejor de 5 sets
+        </option>
+    </select>
+
+    <div class="formatos-tarjetas">
+
+        <label class="tarjeta-formato">
+            <input
+                type="radio"
+                name="formato_visual"
+                value="3"
+                required
+                {% if sets_programados_iniciales == "3" %}checked{% endif %}
+            >
+
+            <span class="contenido-tarjeta-formato">
+                <span class="numero-formato">3</span>
+                <span class="texto-formato">
+                    <strong>Mejor de 3 sets</strong>
+                    <small>Gana el primero en conseguir 2 sets</small>
+                </span>
+                <span class="check-formato">✓</span>
+            </span>
+        </label>
+
+        <label class="tarjeta-formato">
+            <input
+                type="radio"
+                name="formato_visual"
+                value="5"
+                required
+                {% if sets_programados_iniciales == "5" %}checked{% endif %}
+            >
+
+            <span class="contenido-tarjeta-formato">
+                <span class="numero-formato">5</span>
+                <span class="texto-formato">
+                    <strong>Mejor de 5 sets</strong>
+                    <small>Gana el primero en conseguir 3 sets</small>
+                </span>
+                <span class="check-formato">✓</span>
+            </span>
+        </label>
+
+    </div>
+</div>
+
+
+        <div class="equipos">
+            <div class="equipo">
+                <div class="nombre-equipo">
+                    {{ partido.equipo_local.nombre }}
+                </div>
+
+                <div class="campo-marcador">
+                    <label>Sets ganados</label>
+                    <div id="marcador-sets-local">0</div>
+                </div>
+            </div>
+
+            <div class="vs">VS</div>
+
+            <div class="equipo">
+                <div class="nombre-equipo">
+                    {{ partido.equipo_visitante.nombre }}
+                </div>
+
+                <div class="campo-marcador">
+                    <label>Sets ganados</label>
+                    <div id="marcador-sets-visitante">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="contenedor-sets">
+
+            {% for set_data in sets_iniciales %}
+
+                <div
+                    class="bloque-set"
+                    id="bloque-set-{{ set_data.numero }}"
+                    data-numero="{{ set_data.numero }}"
+                    hidden
+                >
+                    <h3>Set {{ set_data.numero }}</h3>
+
+                    <div class="bloques-futbol">
+
+                        <div class="bloque-equipo">
+                            <label for="puntos_local_{{ set_data.numero }}">
+                                {{ partido.equipo_local.nombre }}
+                            </label>
+
+                            <input
+                                type="number"
+                                id="puntos_local_{{ set_data.numero }}"
+                                name="puntos_local_{{ set_data.numero }}"
+                                min="0"
+                                step="1"
+                                value="{{ set_data.puntos_local }}"
+                            />
+                        </div>
+
+                        <div class="bloque-equipo">
+                            <label for="puntos_visitante_{{ set_data.numero }}">
+                                {{ partido.equipo_visitante.nombre }}
+                            </label>
+
+                            <input
+                                type="number"
+                                id="puntos_visitante_{{ set_data.numero }}"
+                                name="puntos_visitante_{{ set_data.numero }}"
+                                min="0"
+                                step="1"
+                                value="{{ set_data.puntos_visitante }}"
+                            />
+                        </div>
+
+                    </div>
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+        <p id="estado-partido-sets" aria-live="polite"></p>
+
+    </section>
+
+{% endif %}
+
+
+                <!-- =================================================
+                     FÚTBOL
+                     ================================================= -->
+
+                {% if es_futbol %}
+
+
+                    <!-- =================================================
+                         GOLES
+                         ================================================= -->
+
+                    <div class="seccion-futbol">
+
+                        <div class="titulo-seccion">
+
+                            <h2>
+                                Goles
+                            </h2>
+
+                        </div>
+
+                        <p class="descripcion-seccion">
+
+                            Agrega un registro por cada gol.
+                            Selecciona el jugador que marcó.
+                            Si un jugador marca varias veces, puedes
+                            seleccionarlo nuevamente.
+
+                        </p>
+
+
+                        <div class="bloques-futbol">
+
+
+                            <!-- =================================================
+                                 GOLES LOCAL
+                                 ================================================= -->
+
+                            <div class="bloque-equipo">
+
+                                <h3>
+
+                                    {{ partido.equipo_local.nombre }}
+
+                                    <span
+                                        class="contador"
+                                        id="contador-goles-local"
+                                    >
+                                        0
+                                    </span>
+
+                                </h3>
+
+                                <p class="subtitulo-equipo">
+                                    Jugador que marcó cada gol.
+                                </p>
+
+
+                                <div
+                                    id="contenedor-goles-local"
+                                    class="lista-dinamica"
+                                >
+                                </div>
+
+
+                                <p
+                                    id="sin-goles-local"
+                                    class="sin-registros"
+                                >
+                                    No hay goles registrados.
+                                </p>
+
+
+                                <button
+                                    type="button"
+                                    class="boton-agregar"
+                                    onclick="agregarGol('local')"
+                                >
+                                    + Agregar gol
+                                </button>
+
+                            </div>
+
+
+                            <!-- =================================================
+                                 GOLES VISITANTE
+                                 ================================================= -->
+
+                            <div class="bloque-equipo">
+
+                                <h3>
+
+                                    {{ partido.equipo_visitante.nombre }}
+
+                                    <span
+                                        class="contador"
+                                        id="contador-goles-visitante"
+                                    >
+                                        0
+                                    </span>
+
+                                </h3>
+
+                                <p class="subtitulo-equipo">
+                                    Jugador que marcó cada gol.
+                                </p>
+
+
+                                <div
+                                    id="contenedor-goles-visitante"
+                                    class="lista-dinamica"
+                                >
+                                </div>
+
+
+                                <p
+                                    id="sin-goles-visitante"
+                                    class="sin-registros"
+                                >
+                                    No hay goles registrados.
+                                </p>
+
+
+                                <button
+                                    type="button"
+                                    class="boton-agregar"
+                                    onclick="agregarGol('visitante')"
+                                >
+                                    + Agregar gol
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         TARJETAS
+                         ================================================= -->
+
+                    <div class="seccion-futbol">
+
+                        <div class="titulo-seccion">
+
+                            <h2>
+                                Tarjetas
+                            </h2>
+
+                        </div>
+
+                        <p class="descripcion-seccion">
+
+                            Selecciona el jugador y el tipo de tarjeta.
+                            Puedes registrar varias tarjetas para
+                            diferentes jugadores.
+
+                        </p>
+
+
+                        <div class="aviso-tarjetas">
+
+                            <strong>
+                                Regla:
+                            </strong>
+
+                            un jugador puede recibir máximo
+                            2 tarjetas amarillas y máximo
+                            1 tarjeta roja en un mismo partido.
+
+                        </div>
+
+
+                        <div class="bloques-futbol">
+
+
+                            <!-- =================================================
+                                 TARJETAS LOCAL
+                                 ================================================= -->
+
+                            <div class="bloque-equipo">
+
+                                <h3>
+
+                                    {{ partido.equipo_local.nombre }}
+
+                                    <span
+                                        class="contador"
+                                        id="contador-tarjetas-local"
+                                    >
+                                        0
+                                    </span>
+
+                                </h3>
+
+                                <p class="subtitulo-equipo">
+                                    Jugador y tipo de tarjeta.
+                                </p>
+
+
+                                <div
+                                    id="contenedor-tarjetas-local"
+                                    class="lista-dinamica"
+                                >
+                                </div>
+
+
+                                <p
+                                    id="sin-tarjetas-local"
+                                    class="sin-registros"
+                                >
+                                    No hay tarjetas registradas.
+                                </p>
+
+
+                                <button
+                                    type="button"
+                                    class="boton-agregar"
+                                    onclick="agregarTarjeta('local')"
+                                >
+                                    + Agregar tarjeta
+                                </button>
+
+                            </div>
+
+
+                            <!-- =================================================
+                                 TARJETAS VISITANTE
+                                 ================================================= -->
+
+                            <div class="bloque-equipo">
+
+                                <h3>
+
+                                    {{ partido.equipo_visitante.nombre }}
+
+                                    <span
+                                        class="contador"
+                                        id="contador-tarjetas-visitante"
+                                    >
+                                        0
+                                    </span>
+
+                                </h3>
+
+                                <p class="subtitulo-equipo">
+                                    Jugador y tipo de tarjeta.
+                                </p>
+
+
+                                <div
+                                    id="contenedor-tarjetas-visitante"
+                                    class="lista-dinamica"
+                                >
+                                </div>
+
+
+                                <p
+                                    id="sin-tarjetas-visitante"
+                                    class="sin-registros"
+                                >
+                                    No hay tarjetas registradas.
+                                </p>
+
+
+                                <button
+                                    type="button"
+                                    class="boton-agregar"
+                                    onclick="agregarTarjeta('visitante')"
+                                >
+                                    + Agregar tarjeta
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+
+                
+
+                <!-- =================================================
+                     BOTONES
+                     ================================================= -->
+
+                <div class="acciones">
+
+                    <button
+                        type="submit"
+                        class="boton boton-guardar"
+                    >
+                        Guardar resultado
+                    </button>
+
+
+                    <a
+                        href="{% url 'partidos_admin' partido.torneo.id %}"
+                        class="boton boton-cancelar"
+                    >
+                        Cancelar
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     DATOS INICIALES
+     ========================================================= -->
+
+{% if es_futbol %}
+
+    {{ jugadores_local|json_script:"jugadores-local-data" }}
+
+    {{ jugadores_visitante|json_script:"jugadores-visitante-data" }}
+
+    {{ goles_local_iniciales|json_script:"goles-local-iniciales" }}
+
+    {{ goles_visitante_iniciales|json_script:"goles-visitante-iniciales" }}
+
+    {{ tarjetas_local_iniciales|json_script:"tarjetas-local-iniciales" }}
+
+    {{ tarjetas_visitante_iniciales|json_script:"tarjetas-visitante-iniciales" }}
+
+
+<script>
+
+    // =========================================================
+    // DATOS DE JUGADORES
+    // =========================================================
+
+    const jugadoresLocal = JSON.parse(
+        document.getElementById(
+            "jugadores-local-data"
+        ).textContent
+    );
+
+
+    const jugadoresVisitante = JSON.parse(
+        document.getElementById(
+            "jugadores-visitante-data"
+        ).textContent
+    );
+
+
+    // =========================================================
+    // DATOS ENVIADOS ANTERIORMENTE
+    // =========================================================
+
+    const golesLocalIniciales = JSON.parse(
+        document.getElementById(
+            "goles-local-iniciales"
+        ).textContent
+    );
+
+
+    const golesVisitanteIniciales = JSON.parse(
+        document.getElementById(
+            "goles-visitante-iniciales"
+        ).textContent
+    );
+
+
+    const tarjetasLocalIniciales = JSON.parse(
+        document.getElementById(
+            "tarjetas-local-iniciales"
+        ).textContent
+    );
+
+
+    const tarjetasVisitanteIniciales = JSON.parse(
+        document.getElementById(
+            "tarjetas-visitante-iniciales"
+        ).textContent
+    );
+
+
+    // =========================================================
+    // OPCIONES DE JUGADORES
+    // =========================================================
+
+    
+    function obtenerOpcionesJugadores(
+        equipo,
+        jugadorSeleccionado = ""
+    ) {
+        const jugadores =
+            equipo === "local"
+                ? jugadoresLocal
+                : jugadoresVisitante;
+
+        const nombreCampo =
+            equipo === "local"
+                ? "jugadores_local"
+                : "jugadores_visitante";
+
+        const participantesSeleccionados = new Set(
+            Array.from(
+                document.querySelectorAll(
+                    `input[name="${nombreCampo}"]:checked`
+                )
+            ).map(function (checkbox) {
+                return String(checkbox.value);
+            })
+        );
+
+        let opciones = `
+            <option value="">
+                Seleccione el jugador
+            </option>
+        `;
+
+        jugadores.forEach(function (jugador) {
+            const idJugador = String(jugador.id);
+
+            if (!participantesSeleccionados.has(idJugador)) {
+                return;
+            }
+
+            const seleccionado =
+                idJugador === String(jugadorSeleccionado)
+                    ? "selected"
+                    : "";
+
+            opciones += `
+                <option value="${jugador.id}" ${seleccionado}>
+                    ${jugador.nombre} ${jugador.apellido}
+                </option>
+            `;
+        });
+
+        return opciones;
+    }
+
+
+    function actualizarSelectoresParticipantes(equipo) {
+        const nombreCampo =
+            equipo === "local"
+                ? "jugadores_local"
+                : "jugadores_visitante";
+
+        const participantes = new Set(
+            Array.from(
+                document.querySelectorAll(
+                    `input[name="${nombreCampo}"]:checked`
+                )
+            ).map(function (checkbox) {
+                return String(checkbox.value);
+            })
+        );
+
+        const selectores = [
+            ...document.querySelectorAll(
+                `.select-gol-${equipo}`
+            ),
+            ...document.querySelectorAll(
+                `#contenedor-tarjetas-${equipo} .select-tarjeta-jugador`
+            )
+        ];
+
+        selectores.forEach(function (selector) {
+            const valorAnterior = selector.value;
+
+            selector.innerHTML = obtenerOpcionesJugadores(
+                equipo,
+                participantes.has(valorAnterior)
+                    ? valorAnterior
+                    : ""
+            );
+
+            if (!participantes.has(valorAnterior)) {
+                selector.value = "";
+            }
+        });
+
+        if (equipo === "local") {
+            actualizarMarcador();
+            actualizarEstadoTarjetas("local");
+        } else {
+            actualizarMarcador();
+            actualizarEstadoTarjetas("visitante");
+        }
+    }
+
+
+
+
+    // =========================================================
+    // AGREGAR GOL
+    // =========================================================
+
+    function agregarGol(
+        equipo,
+        jugadorSeleccionado = ""
+    ) {
+
+        const contenedor =
+            document.getElementById(
+                "contenedor-goles-" +
+                equipo
+            );
+
+
+        const fila =
+            document.createElement(
+                "div"
+            );
+
+
+        fila.className =
+            "fila-dinamica";
+
+
+        fila.innerHTML = `
+
+            <select
+                name="goles_${equipo}"
+                class="select-gol-${equipo}"
+                onchange="actualizarMarcador()"
+            >
+
+                ${
+                    obtenerOpcionesJugadores(
+                        equipo,
+                        jugadorSeleccionado
+                    )
+                }
+
+            </select>
+
+
+            <button
+                type="button"
+                class="boton-eliminar"
+                onclick="eliminarGol(this, '${equipo}')"
+                title="Eliminar gol"
+            >
+                ×
+            </button>
+
+        `;
+
+
+        contenedor.appendChild(
+            fila
+        );
+
+
+        actualizarEstadoGoles(
+            equipo
+        );
+
+
+        actualizarMarcador();
+
+    }
+
+
+    // =========================================================
+    // ELIMINAR GOL
+    // =========================================================
+
+    function eliminarGol(
+        boton,
+        equipo
+    ) {
+
+        const fila =
+            boton.closest(
+                ".fila-dinamica"
+            );
+
+
+        if (fila) {
+
+            fila.remove();
+
+        }
+
+
+        actualizarEstadoGoles(
+            equipo
+        );
+
+
+        actualizarMarcador();
+
+    }
+
+
+    // =========================================================
+    // ACTUALIZAR MARCADOR
+    // =========================================================
+
+    function actualizarMarcador() {
+
+        const filasLocal =
+            document.querySelectorAll(
+                "#contenedor-goles-local " +
+                ".fila-dinamica"
+            );
+
+
+        const filasVisitante =
+            document.querySelectorAll(
+                "#contenedor-goles-visitante " +
+                ".fila-dinamica"
+            );
+
+
+        let golesLocal = 0;
+
+        let golesVisitante = 0;
+
+
+        filasLocal.forEach(
+            function(fila) {
+
+                const jugador =
+                    fila.querySelector(
+                        "select"
+                    );
+
+
+                if (
+                    jugador &&
+                    jugador.value
+                ) {
+
+                    golesLocal++;
+
+                }
+
+            }
+        );
+
+
+        filasVisitante.forEach(
+            function(fila) {
+
+                const jugador =
+                    fila.querySelector(
+                        "select"
+                    );
+
+
+                if (
+                    jugador &&
+                    jugador.value
+                ) {
+
+                    golesVisitante++;
+
+                }
+
+            }
+        );
+
+
+        const marcadorLocal =
+            document.getElementById(
+                "{{ form.marcador_local.id_for_label }}"
+            );
+
+
+        const marcadorVisitante =
+            document.getElementById(
+                "{{ form.marcador_visitante.id_for_label }}"
+            );
+
+
+        if (marcadorLocal) {
+
+            marcadorLocal.value =
+                golesLocal;
+
+            marcadorLocal.readOnly =
+                true;
+
+        }
+
+
+        if (marcadorVisitante) {
+
+            marcadorVisitante.value =
+                golesVisitante;
+
+            marcadorVisitante.readOnly =
+                true;
+
+        }
+
+
+        const contadorLocal =
+            document.getElementById(
+                "contador-goles-local"
+            );
+
+
+        const contadorVisitante =
+            document.getElementById(
+                "contador-goles-visitante"
+            );
+
+
+        if (contadorLocal) {
+
+            contadorLocal.textContent =
+                golesLocal;
+
+        }
+
+
+        if (contadorVisitante) {
+
+            contadorVisitante.textContent =
+                golesVisitante;
+
+        }
+
+    }
+
+
+    // =========================================================
+    // ESTADO DE GOLES
+    // =========================================================
+
+    function actualizarEstadoGoles(
+        equipo
+    ) {
+
+        const contenedor =
+            document.getElementById(
+                "contenedor-goles-" +
+                equipo
+            );
+
+
+        const mensaje =
+            document.getElementById(
+                "sin-goles-" +
+                equipo
+            );
+
+
+        const cantidad =
+            contenedor.querySelectorAll(
+                ".fila-dinamica"
+            ).length;
+
+
+        if (cantidad === 0) {
+
+            mensaje.style.display =
+                "block";
+
+        } else {
+
+            mensaje.style.display =
+                "none";
+
+        }
+
+    }
+
+
+    // =========================================================
+    // AGREGAR TARJETA
+    // =========================================================
+
+    function agregarTarjeta(
+        equipo,
+        jugadorSeleccionado = "",
+        tipoSeleccionado = ""
+    ) {
+
+        const contenedor =
+            document.getElementById(
+                "contenedor-tarjetas-" +
+                equipo
+            );
+
+
+        const fila =
+            document.createElement(
+                "div"
+            );
+
+
+        fila.className =
+            "fila-dinamica tarjeta-fila";
+
+
+        fila.innerHTML = `
+
+            <select
+                name="tarjetas_${equipo}_jugador"
+                class="select-tarjeta-jugador"
+                onchange="validarTarjetaFila(this, '${equipo}')"
+            >
+
+                ${
+                    obtenerOpcionesJugadores(
+                        equipo,
+                        jugadorSeleccionado
+                    )
+                }
+
+            </select>
+
+
+            <select
+                name="tarjetas_${equipo}_tipo"
+                class="select-tarjeta-tipo"
+                onchange="validarTarjetaFila(this, '${equipo}')"
+            >
+
+                <option value="">
+                    Tipo
+                </option>
+
+                <option
+                    value="amarilla"
+                    ${
+                        tipoSeleccionado === "amarilla"
+                            ? "selected"
+                            : ""
+                    }
+                >
+                    Amarilla
+                </option>
+
+                <option
+                    value="roja"
+                    ${
+                        tipoSeleccionado === "roja"
+                            ? "selected"
+                            : ""
+                    }
+                >
+                    Roja
+                </option>
+
+            </select>
+
+
+            <button
+                type="button"
+                class="boton-eliminar"
+                onclick="eliminarTarjeta(this, '${equipo}')"
+                title="Eliminar tarjeta"
+            >
+                ×
+            </button>
+
+        `;
+
+
+        contenedor.appendChild(
+            fila
+        );
+
+
+        actualizarEstadoTarjetas(
+            equipo
+        );
+
+    }
+
+
+    // =========================================================
+    // ELIMINAR TARJETA
+    // =========================================================
+
+    function eliminarTarjeta(
+        boton,
+        equipo
+    ) {
+
+        const fila =
+            boton.closest(
+                ".fila-dinamica"
+            );
+
+
+        if (fila) {
+
+            fila.remove();
+
+        }
+
+
+        actualizarEstadoTarjetas(
+            equipo
+        );
+
+    }
+
+
+    // =========================================================
+    // ACTUALIZAR ESTADO TARJETAS
+    // =========================================================
+
+    function actualizarEstadoTarjetas(
+        equipo
+    ) {
+
+        const contenedor =
+            document.getElementById(
+                "contenedor-tarjetas-" +
+                equipo
+            );
+
+
+        const mensaje =
+            document.getElementById(
+                "sin-tarjetas-" +
+                equipo
+            );
+
+
+        const contador =
+            document.getElementById(
+                "contador-tarjetas-" +
+                equipo
+            );
+
+
+        const cantidad =
+            contenedor.querySelectorAll(
+                ".fila-dinamica"
+            ).length;
+
+
+        if (contador) {
+
+            contador.textContent =
+                cantidad;
+
+        }
+
+
+        if (cantidad === 0) {
+
+            mensaje.style.display =
+                "block";
+
+        } else {
+
+            mensaje.style.display =
+                "none";
+
+        }
+
+    }
+
+
+    // =========================================================
+    // VALIDAR TARJETA
+    // =========================================================
+
+    function validarTarjetaFila(
+        campo,
+        equipo
+    ) {
+
+        const fila =
+            campo.closest(
+                ".fila-dinamica"
+            );
+
+
+        if (!fila) {
+            return;
+        }
+
+
+        const jugadorSelect =
+            fila.querySelector(
+                ".select-tarjeta-jugador"
+            );
+
+
+        const tipoSelect =
+            fila.querySelector(
+                ".select-tarjeta-tipo"
+            );
+
+
+        if (
+            !jugadorSelect ||
+            !tipoSelect
+        ) {
+
+            return;
+
+        }
+
+
+        const jugador =
+            jugadorSelect.value;
+
+
+        const tipo =
+            tipoSelect.value;
+
+
+        if (
+            !jugador ||
+            !tipo
+        ) {
+
+            return;
+
+        }
+
+
+        const contenedor =
+            document.getElementById(
+                "contenedor-tarjetas-" +
+                equipo
+            );
+
+
+        const filas =
+            contenedor.querySelectorAll(
+                ".tarjeta-fila"
+            );
+
+
+        let cantidad =
+            0;
+
+
+        filas.forEach(
+            function(otraFila) {
+
+                const otroJugador =
+                    otraFila.querySelector(
+                        ".select-tarjeta-jugador"
+                    );
+
+
+                const otroTipo =
+                    otraFila.querySelector(
+                        ".select-tarjeta-tipo"
+                    );
+
+
+                if (
+                    otroJugador &&
+                    otroTipo &&
+                    otroJugador.value === jugador &&
+                    otroTipo.value === tipo
+                ) {
+
+                    cantidad++;
+
+                }
+
+            }
+        );
+
+
+        if (
+            tipo === "amarilla" &&
+            cantidad > 2
+        ) {
+
+            alert(
+                "Este jugador ya tiene el máximo permitido de 2 tarjetas amarillas."
+            );
+
+
+            if (
+                campo === tipoSelect
+            ) {
+
+                tipoSelect.value = "";
+
+            } else {
+
+                jugadorSelect.value = "";
+
+            }
+
+
+            return;
+
+        }
+
+
+        if (
+            tipo === "roja" &&
+            cantidad > 1
+        ) {
+
+            alert(
+                "Este jugador ya tiene el máximo permitido de 1 tarjeta roja."
+            );
+
+
+            if (
+                campo === tipoSelect
+            ) {
+
+                tipoSelect.value = "";
+
+            } else {
+
+                jugadorSelect.value = "";
+
+            }
+
+        }
+
+    }
+
+
+    // =========================================================
+    // VALIDACIÓN COMPLETA DE TARJETAS ANTES DE GUARDAR
+    // =========================================================
+
+    function validarTodasLasTarjetas() {
+
+        const equipos = [
+            "local",
+            "visitante"
+        ];
+
+
+        for (
+            const equipo of equipos
+        ) {
+
+            const contenedor =
+                document.getElementById(
+                    "contenedor-tarjetas-" +
+                    equipo
+                );
+
+
+            const filas =
+                contenedor.querySelectorAll(
+                    ".tarjeta-fila"
+                );
+
+
+            const cantidades = {};
+
+
+            for (
+                const fila of filas
+            ) {
+
+                const jugador =
+                    fila.querySelector(
+                        ".select-tarjeta-jugador"
+                    );
+
+
+                const tipo =
+                    fila.querySelector(
+                        ".select-tarjeta-tipo"
+                    );
+
+
+                if (
+                    !jugador ||
+                    !tipo
+                ) {
+
+                    continue;
+
+                }
+
+
+                if (
+                    !jugador.value &&
+                    !tipo.value
+                ) {
+
+                    continue;
+
+                }
+
+
+                if (
+                    !jugador.value ||
+                    !tipo.value
+                ) {
+
+                    alert(
+                        "Completa el jugador y el tipo de cada tarjeta registrada."
+                    );
+
+                    return false;
+
+                }
+
+
+                const clave =
+                    jugador.value +
+                    "_" +
+                    tipo.value;
+
+
+                cantidades[clave] =
+                    (
+                        cantidades[clave] || 0
+                    ) + 1;
+
+
+                if (
+                    tipo.value === "amarilla" &&
+                    cantidades[clave] > 2
+                ) {
+
+                    alert(
+                        "Un jugador no puede recibir más de 2 tarjetas amarillas en un mismo partido."
+                    );
+
+                    return false;
+
+                }
+
+
+                if (
+                    tipo.value === "roja" &&
+                    cantidades[clave] > 1
+                ) {
+
+                    alert(
+                        "Un jugador no puede recibir más de 1 tarjeta roja en un mismo partido."
+                    );
+
+                    return false;
+
+                }
+
+            }
+
+        }
+
+
+        return true;
+
+    }
+
+
+    // =========================================================
+    // CARGAR DATOS SI EL FORMULARIO REGRESA CON ERRORES
+    // =========================================================
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function() {
+
+
+            // Actualizar goles y tarjetas al cambiar participantes.
+            document.querySelectorAll(
+                'input[name="jugadores_local"]'
+            ).forEach(function (checkbox) {
+                checkbox.addEventListener("change", function () {
+                    actualizarSelectoresParticipantes("local");
+                });
+            });
+
+            document.querySelectorAll(
+                'input[name="jugadores_visitante"]'
+            ).forEach(function (checkbox) {
+                checkbox.addEventListener("change", function () {
+                    actualizarSelectoresParticipantes("visitante");
+                });
+            });
+
+
+
+            // ---------------------------------------------
+            // GOLES LOCALES
+            // ---------------------------------------------
+
+            golesLocalIniciales.forEach(
+                function(jugadorId) {
+
+                    agregarGol(
+                        "local",
+                        jugadorId
+                    );
+
+                }
+            );
+
+
+            // ---------------------------------------------
+            // GOLES VISITANTES
+            // ---------------------------------------------
+
+            golesVisitanteIniciales.forEach(
+                function(jugadorId) {
+
+                    agregarGol(
+                        "visitante",
+                        jugadorId
+                    );
+
+                }
+            );
+
+
+            // ---------------------------------------------
+            // TARJETAS LOCALES
+            // ---------------------------------------------
+
+            tarjetasLocalIniciales.forEach(
+                function(tarjeta) {
+
+                    agregarTarjeta(
+                        "local",
+                        tarjeta[0],
+                        tarjeta[1]
+                    );
+
+                }
+            );
+
+
+            // ---------------------------------------------
+            // TARJETAS VISITANTES
+            // ---------------------------------------------
+
+            tarjetasVisitanteIniciales.forEach(
+                function(tarjeta) {
+
+                    agregarTarjeta(
+                        "visitante",
+                        tarjeta[0],
+                        tarjeta[1]
+                    );
+
+                }
+            );
+
+
+            // ---------------------------------------------
+            // ESTADOS INICIALES
+            // ---------------------------------------------
+
+            actualizarEstadoGoles(
+                "local"
+            );
+
+
+            actualizarEstadoGoles(
+                "visitante"
+            );
+
+
+            actualizarEstadoTarjetas(
+                "local"
+            );
+
+
+            actualizarEstadoTarjetas(
+                "visitante"
+            );
+
+
+            actualizarMarcador();
+
+        }
+    );
+
+
+    
+    // =========================================================
+    // VALIDAR AL ENVIAR
+    // =========================================================
+
+    document.getElementById(
+        "formulario-resultado"
+    ).addEventListener(
+        "submit",
+        function(event) {
+
+            actualizarMarcador();
+
+            // ---------------------------------------------
+            // VALIDAR PARTICIPANTES DE AMBOS EQUIPOS
+            // ---------------------------------------------
+
+            const hayParticipantesLocales =
+                document.querySelector(
+                    'input[name="jugadores_local"]:checked'
+                );
+
+            const hayParticipantesVisitantes =
+                document.querySelector(
+                    'input[name="jugadores_visitante"]:checked'
+                );
+
+            if (
+                !hayParticipantesLocales ||
+                !hayParticipantesVisitantes
+            ) {
+                event.preventDefault();
+
+                alert(
+                    "Debes seleccionar al menos un participante de cada equipo."
+                );
+
+                return;
+            }
+
+            // ---------------------------------------------
+            // VALIDAR TARJETAS
+            // ---------------------------------------------
+
+            if (
+                !validarTodasLasTarjetas()
+            ) {
+
+                event.preventDefault();
+
+                return;
+
+            }
+
+        }
+    );
+
+
+</script>
+
+{% endif %}
+
+{% if es_deporte_sets %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const formulario = document.getElementById("formulario-resultado");
+    const selectorFormato = document.getElementById("sets_programados");
+    const marcadorLocal = document.getElementById("marcador-sets-local");
+    const marcadorVisitante = document.getElementById("marcador-sets-visitante");
+    const estado = document.getElementById("estado-partido-sets");
+
+    if (
+        !formulario ||
+        !selectorFormato ||
+        !marcadorLocal ||
+        !marcadorVisitante ||
+        !estado
+    ) {
+        return;
+    }
+
+    const opcionesFormato = document.querySelectorAll(
+    'input[name="formato_visual"]'
+);
+
+opcionesFormato.forEach(function(opcion) {
+    opcion.addEventListener("click", function() {
+        const valor = this.value;
+        const estabaSeleccionada = this.dataset.seleccionada === "true";
+
+        // Desmarcar todas las tarjetas.
+        opcionesFormato.forEach(function(otra) {
+            otra.checked = false;
+            otra.dataset.seleccionada = "false";
+        });
+
+        if (!estabaSeleccionada) {
+            // Seleccionar la tarjeta pulsada.
+            this.checked = true;
+            this.dataset.seleccionada = "true";
+            selectorFormato.value = valor;
+        } else {
+            // Deseleccionar si se pulsa nuevamente.
+            selectorFormato.value = "";
+        }
+
+        // Actualizar los sets.
+        selectorFormato.dispatchEvent(
+            new Event("change", { bubbles: true })
+        );
+    });
+});
+
+
+    const deporte = "{{ partido.torneo.deporte|escapejs }}";
+    const bloques = Array.from(
+        document.querySelectorAll(".bloque-set")
+    );
+
+    function obtenerCampos(numero) {
+        return {
+            local: document.getElementById("puntos_local_" + numero),
+            visitante: document.getElementById("puntos_visitante_" + numero)
+        };
+    }
+
+    function ocultarSet(numero, limpiar) {
+        const bloque = document.getElementById("bloque-set-" + numero);
+
+        if (bloque) {
+            bloque.hidden = true;
+        }
+
+        if (limpiar) {
+            const campos = obtenerCampos(numero);
+
+            if (campos.local) campos.local.value = "";
+            if (campos.visitante) campos.visitante.value = "";
+        }
+    }
+
+    function mostrarSet(numero) {
+        const bloque = document.getElementById("bloque-set-" + numero);
+
+        if (bloque) {
+            bloque.hidden = false;
+        }
+    }
+
+    function validarPuntuacion(local, visitante, objetivo) {
+        if (
+            !Number.isInteger(local) ||
+            !Number.isInteger(visitante) ||
+            local < 0 ||
+            visitante < 0
+        ) {
+            return false;
+        }
+
+        if (local === visitante) {
+            return false;
+        }
+
+        const ganador = Math.max(local, visitante);
+        const perdedor = Math.min(local, visitante);
+        const diferencia = ganador - perdedor;
+
+        if (ganador === objetivo && diferencia >= 2) {
+            return true;
+        }
+
+        return (
+            ganador > objetivo &&
+            perdedor >= objetivo - 1 &&
+            diferencia === 2
+        );
+    }
+
+    function actualizarSets(mostrarErrores) {
+
+        const formato = Number(selectorFormato.value);
+
+        let ganadosLocal = 0;
+        let ganadosVisitante = 0;
+
+        marcadorLocal.textContent = "0";
+        marcadorVisitante.textContent = "0";
+        estado.textContent = "";
+
+        bloques.forEach(function (bloque) {
+            bloque.hidden = true;
+        });
+
+        if (![3, 5].includes(formato)) {
+            if (mostrarErrores) {
+                estado.textContent = "Selecciona mejor de 3 o mejor de 5 sets.";
+            }
+            return false;
+        }
+
+        const necesarios = Math.floor(formato / 2) + 1;
+
+        // Los sets 4 y 5 no existen en el formato de mejor de 3.
+        if (formato === 3) {
+            ocultarSet(4, true);
+            ocultarSet(5, true);
+        }
+
+        for (let numero = 1; numero <= formato; numero++) {
+
+            const campos = obtenerCampos(numero);
+
+            if (!campos.local || !campos.visitante) {
+                estado.textContent = "No se encontraron los campos del set " + numero + ".";
+                return false;
+            }
+
+            const textoLocal = campos.local.value.trim();
+            const textoVisitante = campos.visitante.value.trim();
+
+            // Se muestra el siguiente set que debe registrarse.
+            mostrarSet(numero);
+
+            // No se puede continuar hasta completar ambos marcadores.
+            if (textoLocal === "" && textoVisitante === "") {
+                marcadorLocal.textContent = ganadosLocal;
+                marcadorVisitante.textContent = ganadosVisitante;
+
+                estado.textContent = "Registra los puntos del set " + numero + ".";
+                return !mostrarErrores;
+            }
+
+            if (textoLocal === "" || textoVisitante === "") {
+                marcadorLocal.textContent = ganadosLocal;
+                marcadorVisitante.textContent = ganadosVisitante;
+
+                estado.textContent = "Completa los puntos de ambos equipos en el set " + numero + ".";
+                return false;
+            }
+
+            const puntosLocal = Number(textoLocal);
+            const puntosVisitante = Number(textoVisitante);
+
+            if (
+                !Number.isInteger(puntosLocal) ||
+                !Number.isInteger(puntosVisitante) ||
+                puntosLocal < 0 ||
+                puntosVisitante < 0
+            ) {
+                estado.textContent = "Los puntos deben ser números enteros no negativos.";
+                return false;
+            }
+
+            const objetivo = deporte === "voleibol"
+                ? (numero === formato ? 15 : 25)
+                : 11;
+
+            if (!validarPuntuacion(puntosLocal, puntosVisitante, objetivo)) {
+                estado.textContent =
+                    "El marcador del set " + numero +
+                    " no es válido. Objetivo: " + objetivo +
+                    " puntos, con diferencia mínima de 2.";
+
+                return false;
+            }
+
+            if (puntosLocal > puntosVisitante) {
+                ganadosLocal++;
+            } else {
+                ganadosVisitante++;
+            }
+
+            marcadorLocal.textContent = ganadosLocal;
+            marcadorVisitante.textContent = ganadosVisitante;
+
+            // Si un equipo gana, se ocultan y limpian los sets restantes.
+            if (
+                ganadosLocal === necesarios ||
+                ganadosVisitante === necesarios
+            ) {
+                for (let siguiente = numero + 1; siguiente <= 5; siguiente++) {
+                    ocultarSet(siguiente, true);
+                }
+
+                estado.textContent = "Partido terminado. Ganador: " +
+                    (ganadosLocal === necesarios
+                        ? "{{ partido.equipo_local.nombre|escapejs }}"
+                        : "{{ partido.equipo_visitante.nombre|escapejs }}") +
+                    ".";
+                return true;
+            }
+        }
+
+        estado.textContent = "Registra los sets restantes para determinar el ganador.";
+        return false;
+    }
+
+    selectorFormato.addEventListener("change", function () {
+        actualizarSets(false);
+    });
+
+    bloques.forEach(function (bloque) {
+        const numero = bloque.dataset.numero;
+        const campos = obtenerCampos(numero);
+
+        if (campos.local) {
+            campos.local.addEventListener("input", function () {
+                actualizarSets(false);
+            });
+        }
+
+        if (campos.visitante) {
+            campos.visitante.addEventListener("input", function () {
+                actualizarSets(false);
+            });
+        }
+    });
+
+    formulario.addEventListener("submit", function (event) {
+        if (!actualizarSets(true)) {
+            event.preventDefault();
+        }
+    });
+
+    actualizarSets(false);
+
+});
+</script>
+
+{% endif %}
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const formulario = document.getElementById(
+        "formulario-resultado"
+    );
+
+    if (!formulario) {
+        return;
+    }
+
+    formulario.addEventListener("submit", function (event) {
+        const participantesLocal = document.querySelector(
+            'input[name="jugadores_local"]:checked'
+        );
+
+        const participantesVisitante = document.querySelector(
+            'input[name="jugadores_visitante"]:checked'
+        );
+
+        if (!participantesLocal || !participantesVisitante) {
+            event.preventDefault();
+
+            alert(
+                "Debes seleccionar al menos un participante de cada equipo."
+            );
+        }
+    });
+});
+</script>
+</body>
+</html>

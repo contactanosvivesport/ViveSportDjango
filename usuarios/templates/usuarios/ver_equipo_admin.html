@@ -1,0 +1,366 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>ViveSport | Ver Equipo</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #222;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto;
+        }
+
+        .header {
+            background: #004f3f;
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            margin: 5px 0;
+            opacity: 0.95;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .card h2 {
+            color: #004f3f;
+            margin-bottom: 20px;
+        }
+
+        .datos-equipo {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .dato {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .dato strong {
+            display: block;
+            color: #004f3f;
+            margin-bottom: 5px;
+        }
+
+        .tabla-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #004f3f;
+            color: white;
+        }
+
+        tr:hover {
+            background: #f9f9f9;
+        }
+
+        .sin-integrantes {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+        }
+
+        .acciones {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            padding: 11px 18px;
+            border-radius: 7px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-volver {
+            background: #004f3f;
+            color: white;
+        }
+
+        .btn-volver:hover {
+            background: #003b30;
+        }
+
+        .estado {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: #d4edda;
+            color: #155724;
+            font-weight: bold;
+        }
+
+        @media (max-width: 700px) {
+
+            .container {
+                width: 95%;
+                margin: 20px auto;
+            }
+
+            .datos-equipo {
+                grid-template-columns: 1fr;
+            }
+
+            th,
+            td {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- =====================================================
+             ENCABEZADO
+        ====================================================== -->
+
+        <div class="header">
+
+            <h1>{{ equipo.nombre }}</h1>
+
+            <p>
+                Torneo:
+                <strong>{{ inscripcion.torneo.nombre }}</strong>
+            </p>
+
+            <p>
+                Deporte:
+                {{ inscripcion.torneo.get_deporte_display }}
+            </p>
+
+        </div>
+
+
+        <!-- =====================================================
+             INFORMACIÓN DEL EQUIPO
+        ====================================================== -->
+
+        <div class="card">
+
+            <h2>Información del equipo</h2>
+
+            <div class="datos-equipo">
+
+                <div class="dato">
+
+                    <strong>Nombre del equipo</strong>
+
+                    {{ equipo.nombre }}
+
+                </div>
+
+
+                <div class="dato">
+
+                    <strong>Responsable</strong>
+
+                    {{ inscripcion.responsable.nombre }}
+                    {{ inscripcion.responsable.apellido }}
+
+                </div>
+
+
+                <div class="dato">
+
+                    <strong>Correo del responsable</strong>
+
+                    {{ inscripcion.responsable.correo }}
+
+                </div>
+
+
+                <div class="dato">
+
+                    <strong>Estado de inscripción</strong>
+
+                    <span class="estado">
+                        {{ inscripcion.get_estado_display }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             INTEGRANTES
+        ====================================================== -->
+
+        <div class="card">
+
+            <h2>
+                Integrantes del equipo
+            </h2>
+
+            {% if integrantes %}
+
+                <div class="tabla-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>#</th>
+
+                                <th>Nombre</th>
+
+                                <th>Apellido</th>
+
+                                <th>Celular</th>
+
+                                <th>Centro de Formación</th>
+
+                                <th>Jornada</th>
+
+                                <th>Ficha</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for integrante in integrantes %}
+
+                                <tr>
+
+                                    <td>
+                                        {{ forloop.counter }}
+                                    </td>
+
+                                    <td>
+                                        {{ integrante.nombre }}
+                                    </td>
+
+                                    <td>
+                                        {{ integrante.apellido }}
+                                    </td>
+
+                                    <td>
+                                        {{ integrante.celular }}
+                                    </td>
+
+                                    <td>
+                                        {{ integrante.get_centro_formacion_display }}
+                                    </td>
+
+                                    <td>
+                                        {{ integrante.get_jornada_display }}
+                                    </td>
+
+                                    <td>
+                                        {{ integrante.ficha }}
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div class="sin-integrantes">
+
+                    <p>
+                        Este equipo no tiene integrantes registrados.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- =====================================================
+             ACCIONES
+        ====================================================== -->
+
+        <div class="acciones">
+
+            <a
+                href="{% url 'equipos_torneo_admin' inscripcion.torneo.id %}"
+                class="btn btn-volver"
+            >
+                ← Volver a equipos
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

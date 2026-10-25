@@ -1,0 +1,397 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del resultado | ViveSport</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #263238;
+        }
+
+        .contenedor {
+            width: min(1100px, 92%);
+            margin: 35px auto;
+        }
+
+        .encabezado {
+            background: #004F3F;
+            color: white;
+            padding: 28px;
+            border-radius: 14px;
+            margin-bottom: 24px;
+        }
+
+        .encabezado h1 {
+            margin: 0 0 10px;
+            font-size: 27px;
+        }
+
+        .encabezado p {
+            margin: 0;
+            opacity: .9;
+        }
+
+        .tarjeta {
+            background: white;
+            padding: 24px;
+            border-radius: 14px;
+            margin-bottom: 22px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, .05);
+        }
+
+        .tarjeta h2 {
+            margin: 0 0 20px;
+            color: #004F3F;
+            font-size: 21px;
+        }
+
+        .marcador-contenedor {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 18px;
+            text-align: center;
+        }
+
+        .equipo {
+            font-size: 18px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        .marcador {
+            font-size: 34px;
+            font-weight: bold;
+            color: #004F3F;
+            white-space: nowrap;
+        }
+
+        .versus {
+            color: #75818a;
+            font-size: 14px;
+            margin: 8px 0;
+        }
+
+        .datos-partido {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+            margin-top: 24px;
+        }
+
+        .dato {
+            padding: 14px;
+            background: #f4f6f8;
+            border-radius: 9px;
+        }
+
+        .dato strong {
+            display: block;
+            color: #004F3F;
+            margin-bottom: 7px;
+        }
+
+        .tabla-contenedor {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 350px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 13px 15px;
+            border-bottom: 1px solid #e8ecef;
+        }
+
+        th {
+            background: #004F3F;
+            color: white;
+            font-size: 14px;
+        }
+
+        tbody tr:hover {
+            background: #f7faf9;
+        }
+
+        .vacio {
+            color: #68747b;
+            padding: 10px 0;
+        }
+
+        .tipo-tarjeta {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .amarilla {
+            background: #fff0b3;
+            color: #785b00;
+        }
+
+        .roja {
+            background: #ffe0e0;
+            color: #a32020;
+        }
+
+        .boton-volver {
+            display: inline-block;
+            background: #004F3F;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 4px 0 25px;
+            transition: background .2s;
+        }
+
+        .boton-volver:hover {
+            background: #0a6755;
+        }
+
+        @media (max-width: 600px) {
+            .contenedor {
+                width: 94%;
+                margin: 18px auto;
+            }
+
+            .encabezado, .tarjeta {
+                padding: 18px;
+            }
+
+            .encabezado h1 {
+                font-size: 23px;
+            }
+
+            .marcador-contenedor {
+                gap: 8px;
+            }
+
+            .equipo {
+                font-size: 14px;
+            }
+
+            .marcador {
+                font-size: 27px;
+            }
+
+            th, td {
+                padding: 11px 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="contenedor">
+
+        <header class="encabezado">
+            <h1>Detalle del resultado</h1>
+            <p>{{ partido.torneo.nombre }}</p>
+        </header>
+
+        <section class="tarjeta">
+            <h2>Resultado del partido</h2>
+
+            <div class="marcador-contenedor">
+                <div class="equipo">
+                    {{ partido.equipo_local.nombre }}
+                </div>
+
+                <div>
+                    <div class="marcador">
+                        {{ partido.resultado.marcador_local }}
+                        -
+                        {{ partido.resultado.marcador_visitante }}
+                    </div>
+                    <div class="versus">MARCADOR FINAL</div>
+                </div>
+
+                <div class="equipo">
+                    {{ partido.equipo_visitante.nombre }}
+                </div>
+            </div>
+
+            <div class="datos-partido">
+                <div class="dato">
+                    <strong>Torneo</strong>
+                    {{ partido.torneo.nombre }}
+                </div>
+
+                <div class="dato">
+                    <strong>Grupo o fase</strong>
+                    {% if partido.grupo %}
+                        Grupo {{ partido.grupo.numero }}
+                    {% elif partido.fase %}
+                        {{ partido.fase.get_tipo_display|default:partido.fase.tipo }}
+                    {% else %}
+                        No especificado
+                    {% endif %}
+                </div>
+
+                <div class="dato">
+                    <strong>Fecha</strong>
+                    {{ partido.fecha|date:"d/m/Y"|default:"Sin fecha" }}
+                </div>
+
+                <div class="dato">
+                    <strong>Hora</strong>
+                    {{ partido.hora|time:"h:i A"|default:"Sin hora" }}
+                </div>
+
+                <div class="dato">
+                    <strong>Partido</strong>
+                    {{ partido.numero|default:"No especificado" }}
+                </div>
+
+                {% if partido.jornada %}
+                    <div class="dato">
+                        <strong>Jornada</strong>
+                        {{ partido.jornada }}
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <section class="tarjeta">
+            <h2>Jugadores participantes</h2>
+
+            {% if participaciones %}
+                <div class="tabla-contenedor">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Jugador</th>
+                                <th>Equipo</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for participacion in participaciones %}
+                                <tr>
+                                    <td>
+                                        {{ participacion.jugador.nombre }}
+                                        {{ participacion.jugador.apellido }}
+                                    </td>
+                                    <td>{{ participacion.equipo.nombre }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="vacio">
+                    No hay jugadores registrados como participantes para este partido.
+                </p>
+            {% endif %}
+        </section>
+
+        {% if es_futbol %}
+            <section class="tarjeta">
+                <h2>Goles del partido</h2>
+
+                {% if goles %}
+                    <div class="tabla-contenedor">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Jugador</th>
+                                    <th>Equipo</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for gol in goles %}
+                                    <tr>
+                                        <td>
+                                            {{ gol.jugador.nombre }}
+                                            {{ gol.jugador.apellido }}
+                                        </td>
+                                        <td>{{ gol.equipo.nombre }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="vacio">
+                        No se registraron goles para este partido.
+                    </p>
+                {% endif %}
+            </section>
+        {% endif %}
+
+        <section class="tarjeta">
+            <h2>Tarjetas del partido</h2>
+
+            {% if tarjetas %}
+                <div class="tabla-contenedor">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Jugador</th>
+                                <th>Equipo</th>
+                                <th>Tipo de tarjeta</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for tarjeta in tarjetas %}
+                                <tr>
+                                    <td>
+                                        {{ tarjeta.jugador.nombre }}
+                                        {{ tarjeta.jugador.apellido }}
+                                    </td>
+
+                                    <td>{{ tarjeta.equipo.nombre }}</td>
+
+                                    <td>
+                                        {% if tarjeta.tipo == "amarilla" %}
+                                            <span class="tipo-tarjeta amarilla">
+                                                Amarilla
+                                            </span>
+                                        {% elif tarjeta.tipo == "roja" %}
+                                            <span class="tipo-tarjeta roja">
+                                                Roja
+                                            </span>
+                                        {% else %}
+                                            {{ tarjeta.get_tipo_display|default:tarjeta.tipo }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="vacio">
+                    No se registraron tarjetas para este partido.
+                </p>
+            {% endif %}
+        </section>
+
+        <a href="{% url 'resultados_usuario' %}" class="boton-volver">
+            ← Volver a resultados
+        </a>
+
+    </main>
+</body>
+</html>

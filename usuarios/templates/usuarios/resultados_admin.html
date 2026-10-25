@@ -1,0 +1,584 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ViveSport | Resultados</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f6f8;
+            color: #1f2937;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            min-width: 250px;
+            flex: 0 0 250px;
+            background-color: #004F3F;
+            color: white;
+            padding: 25px 18px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo img {
+            width: 150px;
+            height: auto;
+            display: block;
+            margin: 0 auto 12px;
+        }
+
+        .logo span {
+            display: block;
+            margin-top: 5px;
+            font-size: 12px;
+            opacity: 0.75;
+        }
+
+        .menu-title {
+            width: 100%;
+            font-size: 11px;
+            text-transform: uppercase;
+            opacity: 0.65;
+            margin: 0 12px 12px;
+        }
+
+        .menu {
+            width: 100%;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu li {
+            width: 100%;
+            margin-bottom: 6px;
+        }
+
+        .menu a {
+            width: 100%;
+            display: block;
+            padding: 12px 14px;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            transition: background-color 0.2s ease;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background-color: #0a6755;
+        }
+
+        .logout {
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .logout a {
+            width: 100%;
+            display: block;
+            padding: 12px 14px;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            background-color: rgba(255, 255, 255, 0.08);
+            font-size: 15px;
+        }
+
+        .main {
+            flex: 1;
+            min-width: 0;
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 15px;
+        }
+
+        .topbar h2 {
+            font-size: 25px;
+        }
+
+        .admin-info {
+            text-align: right;
+        }
+
+        .admin-info strong {
+            display: block;
+            font-size: 15px;
+        }
+
+        .admin-info span {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .page-header {
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .page-header h3 {
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .results-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .summary-card span {
+            display: block;
+            color: #6b7280;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .summary-card strong {
+            font-size: 26px;
+            color: #004F3F;
+        }
+
+        .results-panel {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 22px;
+        }
+
+        .results-panel h3 {
+            margin-bottom: 18px;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 760px;
+        }
+
+        th {
+            background: #f4f6f8;
+            color: #374151;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        th, td {
+            padding: 15px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background-color: #f9fafb;
+        }
+
+        .match-teams {
+            font-weight: bold;
+            line-height: 1.5;
+            min-width: 180px;
+        }
+
+        .match-details {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+
+        .score {
+            display: inline-block;
+            background: #e7f3ef;
+            color: #004F3F;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .empty {
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 45px 25px;
+            text-align: center;
+        }
+
+        .empty h3 {
+            margin-bottom: 10px;
+        }
+
+        .empty p {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #004F3F;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .btn-ver {
+    display: inline-block;
+    padding: 9px 16px;
+    background: #004F3F;
+    color: white;
+    text-decoration: none;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: bold;
+    white-space: nowrap;
+    transition: background 0.2s ease;
+}
+
+.btn-ver:hover {
+    background: #0a6755;
+}
+
+        @media (max-width: 850px) {
+            .layout {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                min-width: 100%;
+                flex: none;
+                min-height: auto;
+            }
+
+            .logout {
+                margin-top: 20px;
+            }
+
+            .main {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .admin-info {
+                text-align: left;
+            }
+
+            .page-header,
+            .results-panel {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <img
+                src="{% static 'usuarios/img/logo.png' %}"
+                alt="Logo ViveSport"
+            >
+            <span>Panel administrativo</span>
+        </div>
+
+        <div class="menu-title">Administración</div>
+
+        <ul class="menu">
+            <li>
+                <a href="{% url 'admin_dashboard' %}">Inicio</a>
+            </li>
+            <li>
+                <a href="{% url 'usuarios_admin' %}">Usuarios</a>
+            </li>
+            <li>
+                <a href="{% url 'equipos_admin' %}">Equipos</a>
+            </li>
+            <li>
+                <a href="{% url 'torneos_admin' %}">Torneos</a>
+            </li>
+            <li>
+                <a href="{% url 'inscripciones_admin' %}">Inscripciones</a>
+            </li>
+            <li>
+                <a href="{% url 'inscripciones_equipos_admin' %}">Equipos inscritos</a>
+            </li>
+            <li>
+                <a href="{% url 'configuraciones_competicion' %}">Competición</a>
+            </li>
+            <li>
+                <a href="{% url 'partidos_torneos_admin' %}">Partidos</a>
+            </li>
+            <li>
+                <a href="{% url 'grupos_admin' %}">Grupos</a>
+            </li>
+            <li>
+                <a href="{% url 'resultados_admin' %}" class="active">Resultados</a>
+            </li>
+        </ul>
+
+        <div class="logout">
+            <a href="{% url 'logout' %}">Cerrar sesión</a>
+        </div>
+
+    </aside>
+
+    <main class="main">
+
+        <div class="topbar">
+            <h2>Resultados</h2>
+
+            <div class="admin-info">
+                <strong>{{ user.nombre }} {{ user.apellido }}</strong>
+                <span>{{ user.correo }}</span>
+            </div>
+        </div>
+
+        <section class="page-header">
+            <h3>Resultados de los partidos</h3>
+            <p>
+                Consulta los marcadores oficiales de los partidos
+                disputados en los torneos de ViveSport.
+            </p>
+        </section>
+
+        <section class="results-summary">
+            <article class="summary-card">
+                <span>Partidos con resultado</span>
+                <strong>{{ partidos|length }}</strong>
+            </article>
+        </section>
+
+<section class="results-panel" style="margin-bottom: 20px;">
+
+    <h3>Buscar resultados por torneo</h3>
+
+    <form method="get" action="{% url 'resultados_admin' %}">
+
+        <label
+            for="torneo"
+            style="display: block; margin-bottom: 8px; font-size: 14px;"
+        >
+            Selecciona un torneo
+        </label>
+
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+
+            <select
+                id="torneo"
+                name="torneo"
+                style="flex: 1; min-width: 220px; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; background: white;"
+            >
+                <option value="">Todos los torneos</option>
+
+                {% for torneo in torneos %}
+                    <option
+                        value="{{ torneo.id }}"
+                        {% if torneo_seleccionado == torneo.id|stringformat:"s" %}selected{% endif %}
+                    >
+                        {{ torneo.nombre }}
+                    </option>
+                {% endfor %}
+
+            </select>
+
+            <button
+                type="submit"
+                style="padding: 12px 20px; background: #004F3F; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;"
+            >
+                Buscar
+            </button>
+
+            {% if torneo_seleccionado %}
+                <a
+                    href="{% url 'resultados_admin' %}"
+                    style="padding: 12px 16px; color: #004F3F; text-decoration: none; border: 1px solid #004F3F; border-radius: 8px;"
+                >
+                    Limpiar filtro
+                </a>
+            {% endif %}
+
+        </div>
+
+    </form>
+
+</section>
+
+
+        <section class="results-panel">
+            <h3>Historial de resultados</h3>
+
+            {% if partidos %}
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Torneo</th>
+                                <th>Grupo / Fase</th>
+                                <th>Encuentro</th>
+                                <th>Marcador</th>
+                                <th>Fecha y hora</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for partido in partidos %}
+                                <tr>
+                                    <td>
+                                        {{ partido.torneo.nombre }}
+                                    </td>
+
+                                    <td>
+                                        {% if partido.grupo %}
+                                            {{ partido.grupo }}
+                                        {% elif partido.fase %}
+                                            {{ partido.fase }}
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        <div class="match-teams">
+                                            {{ partido.equipo_local.nombre }}
+                                            <br>
+                                            vs.
+                                            <br>
+                                            {{ partido.equipo_visitante.nombre }}
+                                        </div>
+
+                                        <div class="match-details">
+                                            Partido {{ partido.numero }}
+                                            {% if partido.jornada %}
+                                                · Jornada {{ partido.jornada }}
+                                            {% endif %}
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <span class="score">
+                                            {{ partido.resultado.marcador_local }}
+                                            -
+                                            {{ partido.resultado.marcador_visitante }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        {% if partido.fecha %}
+                                            {{ partido.fecha|date:"d/m/Y" }}
+                                        {% else %}
+                                            —
+                                        {% endif %}
+
+                                        {% if partido.hora %}
+                                            <div class="match-details">
+                                                {{ partido.hora|time:"H:i" }}
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+    <a
+        class="btn-ver"
+        href="{% url 'detalle_resultado_admin' partido.id %}"
+    >
+        Ver
+    </a>
+</td>
+
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty">
+                    <h3>Aún no hay resultados registrados</h3>
+                    <p>
+                        Cuando registres el resultado de un partido,
+                        aparecerá aquí automáticamente.
+                    </p>
+                </div>
+            {% endif %}
+
+            <a class="back-link" href="{% url 'admin_dashboard' %}">
+                ← Volver al panel administrativo
+            </a>
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

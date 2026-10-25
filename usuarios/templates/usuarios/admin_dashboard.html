@@ -1,0 +1,633 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+ name="viewport"
+ content="width=device-width, initial-scale=1.0">
+
+<title>ViveSport | Panel Administrativo</title>
+
+<style>
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #f4f6f8;
+        color: #1f2937;
+    }
+
+    .layout {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    /* =========================
+       SIDEBAR
+    ========================= */
+
+    .sidebar {
+        width: 250px;
+        background-color: #004F3F;
+        color: white;
+        padding: 25px 18px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .logo {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .logo img {
+        width: 150px;
+        height: auto;
+        display: block;
+        margin: 0 auto 12px;
+    }
+
+    .logo span {
+        display: block;
+        margin-top: 5px;
+        font-size: 12px;
+        opacity: 0.75;
+    }
+
+    .menu-title {
+        font-size: 11px;
+        text-transform: uppercase;
+        opacity: 0.65;
+        margin: 0 12px 12px;
+    }
+
+    .menu {
+        list-style: none;
+    }
+
+    .menu li {
+        margin-bottom: 6px;
+    }
+
+    .menu a {
+        display: block;
+        padding: 12px 14px;
+        border-radius: 8px;
+        color: white;
+        text-decoration: none;
+        font-size: 15px;
+        transition: 0.2s;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+        background-color: #0a6755;
+    }
+
+    .logout {
+        margin-top: auto;
+    }
+
+    .logout a {
+        display: block;
+        padding: 12px 14px;
+        border-radius: 8px;
+        color: white;
+        text-decoration: none;
+        background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .logout a:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+    }
+
+    /* =========================
+       CONTENIDO
+    ========================= */
+
+    .main {
+        flex: 1;
+        padding: 30px;
+    }
+
+    .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .topbar h2 {
+        font-size: 25px;
+    }
+
+    .admin-info {
+        text-align: right;
+    }
+
+    .admin-info strong {
+        display: block;
+        font-size: 15px;
+    }
+
+    .admin-info span {
+        font-size: 13px;
+        color: #6b7280;
+    }
+
+    /* =========================
+       BIENVENIDA
+    ========================= */
+
+    .welcome {
+        background-color: white;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 25px;
+        border: 1px solid #e5e7eb;
+    }
+
+    .welcome h3 {
+        margin-bottom: 8px;
+    }
+
+    .welcome p {
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    /* =========================
+       TARJETAS
+    ========================= */
+
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        margin-bottom: 30px;
+    }
+
+    .card {
+        background-color: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 22px;
+    }
+
+    .card-title {
+        color: #6b7280;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    .card-number {
+        font-size: 30px;
+        font-weight: bold;
+        color: #004F3F;
+    }
+
+    /* =========================
+       ACCESOS RÁPIDOS
+    ========================= */
+
+    .section {
+        background-color: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 25px;
+    }
+
+    .section h3 {
+        margin-bottom: 20px;
+    }
+
+    .modules {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+
+    .module {
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 18px;
+    }
+
+    .module h4 {
+        margin-bottom: 7px;
+    }
+
+    .module p {
+        font-size: 13px;
+        color: #6b7280;
+        margin-bottom: 15px;
+    }
+
+    .module a {
+        display: inline-block;
+        text-decoration: none;
+        color: #004F3F;
+        font-weight: bold;
+        font-size: 13px;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 900px) {
+
+        .sidebar {
+            width: 210px;
+        }
+
+        .cards,
+        .modules {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 650px) {
+
+        .layout {
+            flex-direction: column;
+        }
+
+        .sidebar {
+            width: 100%;
+        }
+
+        .logout {
+            margin-top: 20px;
+        }
+
+        .topbar {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .admin-info {
+            text-align: left;
+        }
+
+        .cards,
+        .modules {
+            grid-template-columns: 1fr;
+        }
+
+        .main {
+            padding: 20px;
+        }
+    }
+
+</style>
+
+</head>
+
+<body>
+
+<div class="layout">
+
+<!-- =========================
+     BARRA LATERAL
+========================== -->
+
+<aside class="sidebar">
+
+<div class="logo">
+
+    <img
+        src="{% static 'usuarios/img/logo.png' %}"
+        alt="Logo ViveSport"
+    >
+
+    <span>
+        Panel administrativo
+    </span>
+
+</div>
+
+<div class="menu-title">
+    Administración
+</div>
+
+<ul class="menu">
+
+    <li>
+        <a href="{% url 'admin_dashboard' %}" class="active">
+            Inicio
+        </a>
+    </li>
+
+    <li>
+        <a href="{% url 'usuarios_admin' %}">
+            Usuarios
+        </a>
+    </li>
+
+    <li>
+    <a href="{% url 'equipos_admin' %}">
+        Equipos
+    </a>
+</li>
+
+    <li>
+        <a href="{% url 'torneos_admin' %}">
+            Torneos
+        </a>
+    </li>
+
+    <li>
+        <a href="{% url 'inscripciones_admin' %}">
+Inscripciones
+        </a>
+    </li>
+
+    <li>
+        <a href="{% url 'inscripciones_equipos_admin' %}">
+            Equipos inscritos
+        </a>
+    </li>
+
+    <li>
+    <a href="{% url 'configuraciones_competicion' %}">
+        Competición
+    </a>
+</li>
+
+    <li>
+    <a href="{% url 'partidos_torneos_admin' %}">
+        Partidos
+    </a>
+</li>
+
+<li>
+    <a href="{% url 'grupos_admin' %}">
+        Grupos
+    </a>
+</li>
+
+<li>
+    <a href="{% url 'resultados_admin' %}">
+        Resultados
+    </a>
+</li>
+
+</ul>
+
+<div class="logout">
+
+    <a href="{% url 'logout' %}">
+        Cerrar sesión
+    </a>
+
+</div>
+
+</aside>
+
+<!-- =========================
+     CONTENIDO PRINCIPAL
+========================== -->
+
+<main class="main">
+
+
+<div class="topbar">
+
+    <h2>Panel de Administrador</h2>
+
+    <div class="admin-info">
+
+        <strong>
+            {{ user.nombre }} {{ user.apellido }}
+        </strong>
+
+        <span>
+            {{ user.correo }}
+        </span>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     BIENVENIDA
+========================== -->
+
+<section class="welcome">
+
+    <h3>
+        Bienvenido, {{ user.nombre }}
+    </h3>
+
+    <p>
+        Desde este panel puedes administrar
+        los diferentes módulos de ViveSport.
+    </p>
+
+</section>
+
+
+<!-- =========================
+     RESUMEN
+========================== -->
+
+<section class="cards">
+
+    <div class="card">
+
+        <div class="card-title">
+            Usuarios registrados
+        </div>
+
+        <div class="card-number">
+            {{ usuarios_registrados }}
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="card-title">
+            Equipos registrados
+        </div>
+
+        <div class="card-number">
+        {{ equipos_registrados }}
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="card-title">
+            Torneos activos
+        </div>
+
+        <div class="card-number">
+        {{ torneos_activos }}
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     ACCESOS RÁPIDOS
+========================== -->
+
+<section class="section">
+
+    <h3>
+        Administración de ViveSport
+    </h3>
+
+    <div class="modules">
+
+        <div class="module">
+
+            <h4>
+                Usuarios
+            </h4>
+
+            <p>
+                Gestiona las cuentas registradas
+                en ViveSport.
+            </p>
+
+            <a href="{% url 'usuarios_admin' %}">
+                Gestionar usuarios →
+            </a>
+
+        </div>
+
+
+        <div class="module">
+
+    <h4>
+        Equipos
+    </h4>
+
+    <p>
+        Consulta los equipos aceptados
+        en cada torneo.
+    </p>
+
+    <a href="{% url 'equipos_admin' %}">
+        Gestionar equipos →
+    </a>
+
+</div>
+
+
+        <div class="module">
+
+            <h4>
+                Torneos
+            </h4>
+        
+            <p>
+                Gestiona torneos y competencias.
+            </p>
+        
+            <a href="{% url 'torneos_admin' %}">
+                Gestionar torneos →
+            </a>
+        
+        </div>
+
+
+        <div class="module">
+
+            <h4>
+                Inscripciones
+            </h4>
+
+            <p>
+                Revisa y gestiona las inscripciones.
+            </p>
+
+            <a href="{% url 'inscripciones_admin' %}">
+                Gestionar inscripciones →
+            </a>
+
+        </div>
+        <div class="module">
+
+    <h4>
+        Competición
+    </h4>
+
+    <p>
+        Configura y administra la estructura
+        competitiva de los torneos.
+    </p>
+
+    <a href="{% url 'configuraciones_competicion' %}">
+        Gestionar competición →
+    </a>
+
+</div>
+
+
+        <div class="module">
+
+    <h4>
+        Partidos
+    </h4>
+
+    <p>
+        Administra la programación de partidos.
+    </p>
+
+    <a href="{% url 'partidos_torneos_admin' %}">
+        Gestionar partidos →
+    </a>
+
+</div>
+
+
+        <div class="module">
+
+            <h4>
+                Resultados
+            </h4>
+
+            <p>
+                Registra y consulta resultados.
+            </p>
+
+            <a href="{% url 'resultados_admin' %}">
+    Consultar resultados →
+</a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+</main>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,943 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+
+>
+
+<title>
+    ViveSport | Inscripciones
+</title>
+
+<style>
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #f4f6f8;
+        color: #1f2937;
+    }
+
+    .layout {
+        display: flex;
+        min-height: 100vh;
+    }
+
+
+    /* =========================
+   SIDEBAR
+========================= */
+
+.sidebar {
+    width: 250px;
+    min-width: 250px;
+    flex: 0 0 250px;
+
+    background-color: #004F3F;
+    color: white;
+
+    padding: 25px 18px;
+
+    display: flex;
+    flex-direction: column;
+
+    min-height: 100vh;
+
+    /* Evita que el contenido comprima el menú */
+    flex-shrink: 0;
+}
+
+.logo {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.logo img {
+    width: 150px;
+    height: auto;
+    display: block;
+    margin: 0 auto 12px;
+}
+
+.logo span {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    opacity: 0.75;
+}
+
+.menu-title {
+    width: 100%;
+
+    font-size: 11px;
+    text-transform: uppercase;
+
+    opacity: 0.65;
+
+    margin: 0 12px 12px;
+}
+
+.menu {
+    width: 100%;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu li {
+    width: 100%;
+    margin-bottom: 6px;
+}
+
+.menu a {
+    width: 100%;
+
+    display: block;
+
+    padding: 12px 14px;
+
+    border-radius: 8px;
+
+    color: white;
+    text-decoration: none;
+
+    font-size: 15px;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.menu a:hover,
+.menu a.active {
+    background-color: #0a6755;
+}
+
+.logout {
+    width: 100%;
+    margin-top: auto;
+}
+
+.logout a {
+    width: 100%;
+
+    display: block;
+
+    padding: 12px 14px;
+
+    border-radius: 8px;
+
+    color: white;
+    text-decoration: none;
+
+    background-color: rgba(255, 255, 255, 0.08);
+
+    font-size: 15px;
+
+    transition: background-color 0.2s ease;
+}
+
+.logout a:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+
+    /* =========================
+       CONTENIDO PRINCIPAL
+    ========================= */
+
+    .main {
+        flex: 1;
+        padding: 30px;
+    }
+
+
+    /* =========================
+       TOPBAR
+    ========================= */
+
+    .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+    .topbar h2 {
+        font-size: 25px;
+    }
+
+    .admin-info {
+        text-align: right;
+    }
+
+    .admin-info strong {
+        display: block;
+        font-size: 15px;
+    }
+
+    .admin-info span {
+        font-size: 13px;
+        color: #6b7280;
+    }
+
+
+    /* =========================
+       ENCABEZADO
+    ========================= */
+
+    .page-header {
+        background-color: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 20px;
+    }
+
+    .page-header h3 {
+        margin-bottom: 8px;
+    }
+
+    .page-header p {
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+
+    /* =========================
+       MENSAJES
+    ========================= */
+
+    .messages {
+        margin-bottom: 20px;
+    }
+
+    .message {
+        background-color: #e8f5e9;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+        border-radius: 8px;
+        padding: 12px 15px;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+
+
+    /* =========================
+       BARRA DE ACCIONES
+    ========================= */
+
+    .actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .search {
+        flex: 1;
+    }
+
+    .search input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 14px;
+        outline: none;
+    }
+
+    .search input:focus {
+        border-color: #004F3F;
+    }
+
+
+    /* =========================
+       BOTONES
+    ========================= */
+
+    .btn {
+        display: inline-block;
+        padding: 12px 18px;
+        border-radius: 8px;
+        border: none;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        background-color: #004F3F;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #0a6755;
+    }
+
+
+    /* =========================
+       TABLA
+    ========================= */
+
+    .table-container {
+        background-color: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 950px;
+    }
+
+    thead {
+        background-color: #f8fafc;
+    }
+
+    th {
+        text-align: left;
+        padding: 15px;
+        font-size: 12px;
+        text-transform: uppercase;
+        color: #6b7280;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    td {
+        padding: 15px;
+        font-size: 14px;
+        border-bottom: 1px solid #f0f1f3;
+    }
+
+    tbody tr:hover {
+        background-color: #fafafa;
+    }
+
+
+    /* =========================
+       INFORMACIÓN DEL TORNEO
+    ========================= */
+
+    .torneo-nombre {
+        font-weight: bold;
+        color: #1f2937;
+    }
+
+    .deporte {
+        font-weight: 500;
+    }
+
+
+    /* =========================
+       BADGES
+    ========================= */
+
+    .badge {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: bold;
+    }
+
+    .badge-open {
+        background-color: #e8f5e9;
+        color: #166534;
+    }
+
+    .badge-closed {
+        background-color: #fee2e2;
+        color: #b91c1c;
+    }
+
+
+    /* =========================
+       ACCIONES TABLA
+    ========================= */
+
+    .table-actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .action {
+        padding: 7px 10px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+    }
+
+    .action-edit {
+        background-color: #e8f5e9;
+        color: #166534;
+    }
+
+    .action-edit:hover {
+        background-color: #d5ead7;
+    }
+
+    .action-open {
+        background-color: #dcfce7;
+        color: #15803d;
+    }
+
+    .action-open:hover {
+        background-color: #bbf7d0;
+    }
+
+    .action-close {
+        background-color: #fff7ed;
+        color: #c2410c;
+    }
+
+    .action-close:hover {
+        background-color: #fed7aa;
+    }
+
+    .action-delete {
+        background-color: #fee2e2;
+        color: #b91c1c;
+    }
+
+    .action-delete:hover {
+        background-color: #fecaca;
+    }
+
+
+    /* =========================
+       ESTADO VACÍO
+    ========================= */
+
+    .empty-state {
+        text-align: center;
+        padding: 45px 20px;
+    }
+
+    .empty-state h4 {
+        margin-bottom: 8px;
+        font-size: 17px;
+    }
+
+    .empty-state p {
+        color: #6b7280;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 900px) {
+
+        .sidebar {
+            width: 210px;
+        }
+
+        .actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+    }
+
+
+    @media (max-width: 650px) {
+
+        .layout {
+            flex-direction: column;
+        }
+
+        .sidebar {
+            width: 100%;
+        }
+
+        .logout {
+            margin-top: 20px;
+        }
+
+        .topbar {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .admin-info {
+            text-align: left;
+        }
+
+        .main {
+            padding: 20px;
+        }
+
+    }
+
+</style>
+
+</head>
+
+<body>
+
+<div class="layout">
+
+<!-- =========================
+     SIDEBAR
+========================== -->
+
+<aside class="sidebar">
+
+<div class="logo">
+
+    <img
+        src="{% static 'usuarios/img/logo.png' %}"
+        alt="Logo ViveSport"
+    >
+
+    <span>
+        Panel administrativo
+    </span>
+
+</div>
+
+
+<div class="menu-title">
+    Administración
+</div>
+
+
+<ul class="menu">
+
+    <li>
+        <a href="{% url 'admin_dashboard' %}" >
+            Inicio
+        </a>
+    </li>
+
+    <li>
+        <a href="{% url 'usuarios_admin' %}">
+            Usuarios
+        </a>
+    </li>
+
+    <li>
+    <a href="{% url 'equipos_admin' %}">
+        Equipos
+    </a>
+</li>
+
+    <li>
+        <a href="{% url 'torneos_admin' %}">
+            Torneos
+        </a>
+    </li>
+
+    <li>
+        <a href="{% url 'inscripciones_admin' %}" class="active">
+Inscripciones
+        </a>
+    </li>
+
+    <li>
+        <a href="{% url 'inscripciones_equipos_admin' %}">
+            Equipos inscritos
+        </a>
+    </li>
+    <li>
+    <a href="{% url 'configuraciones_competicion' %}">
+        Competición
+    </a>
+</li>
+
+    <li>
+    <a href="{% url 'partidos_torneos_admin' %}">
+        Partidos
+    </a>
+</li>
+<li>
+    <a href="{% url 'grupos_admin' %}">
+        Grupos
+    </a>
+</li>
+
+    <li>
+        <a href="{% url 'resultados_admin' %}">
+            Resultados
+        </a>
+    </li>
+
+</ul>
+
+
+<div class="logout">
+
+    <a href="{% url 'logout' %}">
+        Cerrar sesión
+    </a>
+
+</div>
+
+</aside>
+
+<!-- =========================
+     CONTENIDO
+========================== -->
+
+<main class="main">
+
+
+<!-- =========================
+     TOPBAR
+========================== -->
+
+<div class="topbar">
+
+    <h2>
+        Gestión de Inscripciones
+    </h2>
+
+
+    <div class="admin-info">
+
+        <strong>
+            {{ user.nombre }} {{ user.apellido }}
+        </strong>
+
+        <span>
+            {{ user.correo }}
+        </span>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================
+     ENCABEZADO
+========================== -->
+
+<section class="page-header">
+
+    <h3>
+        Configuración de inscripciones
+    </h3>
+
+    <p>
+        Configura y controla las inscripciones
+        de los torneos disponibles en ViveSport.
+    </p>
+
+</section>
+
+
+
+<!-- =========================
+     MENSAJES DJANGO
+========================== -->
+
+{% if messages %}
+
+    <div class="messages">
+
+        {% for message in messages %}
+
+            <div class="message">
+
+                {{ message }}
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% endif %}
+
+
+
+<!-- =========================
+     ACCIONES
+========================== -->
+
+<div class="actions">
+
+
+
+    <a
+        href="{% url 'configurar_inscripciones' %}"
+        class="btn btn-primary"
+    >
+        + Configurar torneo
+    </a>
+
+</div>
+
+
+
+<!-- =========================
+     TABLA
+========================== -->
+
+<div class="table-container">
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>
+                    Torneo
+                </th>
+
+                <th>
+                    Deporte
+                </th>
+
+                <th>
+                    Fecha de inicio
+                </th>
+
+                <th>
+                    Mínimo
+                </th>
+
+                <th>
+                    Máximo
+                </th>
+
+                <th>
+                    Estado
+                </th>
+
+                <th>
+                    Acciones
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+
+            {% for configuracion in configuraciones %}
+
+                <tr class="fila-inscripcion">
+
+
+                    <td class="torneo-nombre">
+
+                        {{ configuracion.torneo.nombre }}
+
+                    </td>
+
+
+                    <td class="deporte">
+
+                        {{ configuracion.torneo.get_deporte_display }}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ configuracion.torneo.fecha_inicio }}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ configuracion.minimo_integrantes }}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ configuracion.maximo_integrantes }}
+
+                    </td>
+
+
+                    <td>
+
+
+                        {% if configuracion.inscripciones_abiertas %}
+
+                            <span class="badge badge-open">
+                                ABIERTAS
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge badge-closed">
+                                CERRADAS
+                            </span>
+
+                        {% endif %}
+
+
+                    </td>
+
+
+                    <td>
+
+                        <div class="table-actions">
+
+
+                            <!-- EDITAR -->
+
+                            <a
+                                href="{% url 'editar_configuracion_inscripcion' configuracion.id %}"
+                                class="action action-edit"
+                            >
+                                Editar
+                            </a>
+
+
+
+                            <!-- ABRIR / CERRAR -->
+
+                           {% if configuracion.inscripciones_abiertas %}
+
+    <form
+        method="POST"
+        action="{% url 'cerrar_inscripciones' configuracion.id %}"
+    >
+
+        {% csrf_token %}
+
+        <button
+            type="submit"
+            class="action action-close"
+        >
+            Cerrar
+        </button>
+
+    </form>
+
+{% elif not configuracion.sorteo_realizado %}
+
+    <form
+        method="POST"
+        action="{% url 'abrir_inscripciones' configuracion.id %}"
+    >
+
+        {% csrf_token %}
+
+        <button
+            type="submit"
+            class="action action-open"
+        >
+            Abrir
+        </button>
+
+    </form>
+
+{% else %}
+
+    <span class="action action-close">
+        Sorteo realizado
+    </span>
+
+{% endif %} 
+
+
+
+                            <!-- ELIMINAR -->
+
+                            <a
+                                href="{% url 'eliminar_configuracion_inscripcion' configuracion.id %}"
+                                class="action action-delete"
+                            >
+                                Eliminar
+                            </a>
+
+
+                        </div>
+
+                    </td>
+
+
+                </tr>
+
+
+            {% empty %}
+
+
+                <tr>
+
+                    <td colspan="7">
+
+                        <div class="empty-state">
+
+                            <h4>
+                                No existen configuraciones
+                            </h4>
+
+                            <p>
+                                Todavía no hay configuraciones
+                                de inscripción para los torneos.
+                            </p>
+
+                            <a
+                                href="{% url 'configurar_inscripciones' %}"
+                                class="btn btn-primary"
+                            >
+                                + Configurar primer torneo
+                            </a>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+
+            {% endfor %}
+
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</main>
+
+</div>
+
+
+
+</body>
+
+</html>

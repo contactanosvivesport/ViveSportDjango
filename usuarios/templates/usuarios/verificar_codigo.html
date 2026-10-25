@@ -1,0 +1,157 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificar código | ViveSport</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: #f4f6f8;
+            font-family: Arial, sans-serif;
+        }
+
+        .panel {
+            width: 100%;
+            max-width: 440px;
+            padding: 36px;
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 8px 30px rgba(0,0,0,.09);
+        }
+
+        .marca {
+            text-align: center;
+            color: #004f3f;
+            font-size: 27px;
+            font-weight: 800;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 23px;
+            color: #18332d;
+        }
+
+        p {
+            color: #64716d;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        label {
+            display: block;
+            margin: 16px 0 8px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ccd5d1;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 14px;
+            border: 0;
+            border-radius: 8px;
+            background: #006b53;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .mensajes {
+            padding: 12px;
+            margin: 16px 0;
+            background: #fff1f0;
+            color: #8b2420;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        a {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: #006b53;
+            text-decoration: none;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <main class="panel">
+        <div class="marca">VIVESPORT</div>
+
+        <h1>Verificar código</h1>
+
+        <p>
+            Introduce el correo de tu cuenta y el código de
+            seis dígitos que recibiste. El código vence
+            después de 10 minutos.
+        </p>
+
+        {% if messages %}
+            <div class="mensajes" role="alert">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <label for="correo">Correo electrónico</label>
+            <input
+                type="email"
+                id="correo"
+                name="correo"
+                maxlength="254"
+                autocomplete="email"
+                required
+            >
+
+            <label for="codigo">Código de seis dígitos</label>
+            <input
+                type="text"
+                id="codigo"
+                name="codigo"
+                inputmode="numeric"
+                pattern="[0-9]{6}"
+                minlength="6"
+                maxlength="6"
+                autocomplete="one-time-code"
+                placeholder="000000"
+                required
+            >
+
+            <button type="submit">Verificar código</button>
+        </form>
+
+        <a href="{% url 'solicitar_recuperacion' %}">
+            Solicitar otro código
+        </a>
+
+        <a href="{% url 'login' %}">
+            Volver al inicio de sesión
+        </a>
+    </main>
+</body>
+</html>

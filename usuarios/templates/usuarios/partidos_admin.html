@@ -1,0 +1,802 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        ViveSport | Partidos
+    </title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background-color: #f5f5f5;
+            color: #222;
+        }
+
+        .contenedor {
+            display: flex;
+            min-height: 100vh;
+        }
+
+
+        /* ==============================================
+           SIDEBAR
+        ============================================== */
+
+        .sidebar {
+            width: 250px;
+            background-color: #004F3F;
+            color: white;
+            padding: 25px 18px;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+
+        /* ==============================================
+           LOGO
+        ============================================== */
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo img {
+            width: 150px;
+            height: auto;
+            display: block;
+            margin: 0 auto 12px;
+        }
+
+        .logo span {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+
+        /* ==============================================
+           TÍTULO DEL MENÚ
+        ============================================== */
+
+        .menu-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+
+        /* ==============================================
+           MENÚ
+        ============================================== */
+
+        .menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .menu li {
+            list-style: none;
+        }
+
+        .menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 12px 14px;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        .menu a:hover {
+            background-color: #0a6755;
+        }
+
+        .menu .active {
+            background-color: #0a6755;
+        }
+
+
+        /* ==============================================
+           CERRAR SESIÓN
+        ============================================== */
+
+        .logout {
+            margin-top: auto;
+        }
+
+        .logout a {
+            display: block;
+            padding: 12px 14px;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .logout a:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+
+        /* ==============================================
+           CONTENIDO
+        ============================================== */
+
+        .contenido {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .encabezado {
+            margin-bottom: 30px;
+        }
+
+        .encabezado h2 {
+            color: #004F3F;
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .encabezado p {
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+
+        /* ==============================================
+           TABLA
+        ============================================== */
+
+        .tabla-contenedor {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            overflow-x: auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #004F3F;
+            color: white;
+            padding: 14px;
+            text-align: left;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+
+.fase-destacada {
+    background: #edf7f1;
+    font-weight: 600;
+}
+
+.fase-final {
+    background: #fff8e4;
+}
+
+.fase-etiqueta {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 7px;
+    background: #e8f1ee;
+    color: #004F3F;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.fase-etiqueta.final {
+    background: #f7e9b8;
+    color: #775b12;
+}
+
+.marcador-admin {
+    color: #004F3F;
+    font-size: 17px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+
+
+        /* ==============================================
+           ESTADOS
+        ============================================== */
+
+        .estado {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .pendiente {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .programado {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .jugado {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .cancelado {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .sin-dato {
+            color: #888;
+        }
+
+
+        /* ==============================================
+           BOTONES
+        ============================================== */
+
+        .acciones {
+            margin-top: 25px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .boton {
+            display: inline-block;
+            padding: 11px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+
+        .boton-secundario {
+            background-color: #e9ecef;
+            color: #333;
+        }
+
+        .boton-secundario:hover {
+            background-color: #d6d8db;
+        }
+
+        .boton-programar {
+            background-color: #ff7a4a;
+            color: white;
+        }
+
+        .boton-programar:hover {
+            background-color: #e5673c;
+        }
+
+        .boton-resultado {
+            background-color: #004F3F;
+            color: white;
+        }
+
+        .boton-resultado:hover {
+            background-color: #0a6755;
+        }
+
+
+        /* ==============================================
+           RESPONSIVE
+        ============================================== */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                width: 210px;
+            }
+
+            .contenido {
+                padding: 25px;
+            }
+
+            .logo img {
+                width: 130px;
+            }
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .contenedor {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .contenido {
+                padding: 20px;
+            }
+
+            .logo img {
+                width: 120px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="contenedor">
+
+
+    <!-- ==============================================
+         SIDEBAR
+    ============================================== -->
+
+    <aside class="sidebar">
+
+
+        <div class="logo">
+
+            <img
+                src="{% static 'usuarios/img/logo.png' %}"
+                alt="Logo ViveSport"
+            >
+
+            <span>
+                Panel administrativo
+            </span>
+
+        </div>
+
+
+        <div class="menu-title">
+            Administración
+        </div>
+
+
+        <ul class="menu">
+
+
+            <li>
+
+                <a href="{% url 'admin_dashboard' %}">
+                    Inicio
+                </a>
+
+            </li>
+
+
+            <li>
+
+                <a href="{% url 'usuarios_admin' %}">
+                    Usuarios
+                </a>
+
+            </li>
+
+
+            <li>
+
+                <a href="{% url 'equipos_admin' %}">
+                    Equipos
+                </a>
+
+            </li>
+
+
+            <li>
+
+                <a href="{% url 'torneos_admin' %}">
+                    Torneos
+                </a>
+
+            </li>
+
+
+            <li>
+
+                <a href="{% url 'inscripciones_admin' %}">
+                    Inscripciones
+                </a>
+
+            </li>
+
+
+            <li>
+
+                <a href="{% url 'inscripciones_equipos_admin' %}">
+                    Equipos inscritos
+                </a>
+
+            </li>
+
+
+            <li>
+
+                <a href="{% url 'configuraciones_competicion' %}">
+                    Competición
+                </a>
+
+            </li>
+
+
+            <li>
+
+                <a
+                    href="{% url 'partidos_torneos_admin' %}"
+                    class="active"
+                >
+                    Partidos
+                </a>
+
+            </li>
+
+<li>
+    <a href="{% url 'grupos_admin' %}">
+        Grupos
+    </a>
+</li>
+            <li>
+
+                <a href="{% url 'resultados_admin' %}">
+                    Resultados
+                </a>
+
+            </li>
+
+
+        </ul>
+
+
+        <div class="logout">
+
+            <a href="{% url 'logout' %}">
+                Cerrar sesión
+            </a>
+
+        </div>
+
+
+    </aside>
+
+
+    <!-- ==============================================
+         CONTENIDO
+    ============================================== -->
+
+    <main class="contenido">
+
+
+        <div class="encabezado">
+
+            <h2>
+                Partidos
+            </h2>
+
+            <p>
+                Torneo:
+                <strong>
+                    {{ torneo.nombre }}
+                </strong>
+            </p>
+
+            <p>
+                Deporte:
+                <strong>
+                    {{ torneo.get_deporte_display }}
+                </strong>
+            </p>
+
+        </div>
+
+
+        <!-- ==========================================
+             TABLA DE PARTIDOS
+        =========================================== -->
+
+        <div class="tabla-contenedor">
+
+
+            {% if partidos %}
+
+
+                <table>
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Partido
+                            </th>
+                            <th>
+                                Fase
+                            </th>
+
+                            <th>
+                                Grupo
+                            </th>
+
+                            <th>
+                                Local
+                            </th>
+
+                            <th>
+                                Visitante
+                            </th>
+                            <th>
+                                Resultado
+                            </th>
+
+                            <th>
+                                Fecha
+                            </th>
+
+                            <th>
+                                Hora
+                            </th>
+
+                            <th>
+                                Estado
+                            </th>
+
+                            <th>
+                                Acción
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        {% for partido in partidos %}
+
+
+                            <tr>
+
+
+                                <td>
+                                    {{ partido.numero }}
+                                </td>
+
+
+                <td>
+                    {% if partido.fase %}
+                        <span class="fase-etiqueta {% if partido.fase.tipo == 'final' %}final{% endif %}">
+                            {{ partido.fase.get_tipo_display }}
+                        </span>
+                    {% elif partido.grupo %}
+                        Fase de grupos
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+
+
+
+                                <td>
+
+                                    {% if partido.grupo %}
+
+                                        {{ partido.grupo.nombre }}
+
+                                    {% else %}
+
+                                        —
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+                                    {{ partido.equipo_local.nombre }}
+                                </td>
+
+
+                                <td>
+                                    {{ partido.equipo_visitante.nombre }}
+                                </td>
+
+
+<td>
+    {% if partido.estado == "jugado" and partido.resultado %}
+        <span class="marcador-admin">
+            {{ partido.resultado.marcador_local }}
+            -
+            {{ partido.resultado.marcador_visitante }}
+        </span>
+    {% else %}
+        <span class="sin-dato">Por jugar</span>
+    {% endif %}
+</td>
+
+
+
+                                <td>
+
+                                    {% if partido.fecha %}
+
+                                        {{ partido.fecha|date:"d/m/Y" }}
+
+                                    {% else %}
+
+                                        <span class="sin-dato">
+                                            Pendiente
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if partido.hora %}
+
+                                        {{ partido.hora|time:"H:i" }}
+
+                                    {% else %}
+
+                                        <span class="sin-dato">
+                                            Pendiente
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    <span
+                                        class="estado {{ partido.estado }}"
+                                    >
+                                        {{ partido.get_estado_display }}
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+
+                                    {% if partido.estado == "pendiente" %}
+
+
+                                        <a
+                                            href="{% url 'programar_partido' partido.id %}"
+                                            class="boton boton-programar"
+                                        >
+                                            Programar
+                                        </a>
+
+
+                                    
+{% elif partido.estado == "programado" %}
+
+    <a
+        href="{% url 'programar_partido' partido.id %}"
+        class="boton boton-programar"
+    >
+        Editar partido
+    </a>
+
+    <a
+        href="{% url 'registrar_resultado' partido.id %}"
+        class="boton boton-resultado"
+    >
+        Registrar resultado
+    </a>
+
+
+
+                                    {% else %}
+
+                                        —
+
+                                    {% endif %}
+
+
+                                </td>
+
+
+                            </tr>
+
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+
+                </table>
+
+
+            {% else %}
+
+
+                <p>
+                    No hay partidos generados para este torneo.
+                </p>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+        <!-- ==========================================
+             ACCIONES
+        =========================================== -->
+
+        <div class="acciones">
+
+
+            <a
+                href="{% url 'ver_grupos_competicion' configuracion.id %}"
+                class="boton boton-secundario"
+            >
+                Volver a grupos
+            </a>
+
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+</body>
+
+</html>

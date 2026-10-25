@@ -1,0 +1,799 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+
+>
+
+<title>
+    ViveSport | Panel de Usuario
+</title>
+
+<style>
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #f4f6f8;
+        color: #1f2937;
+    }
+
+    .layout {
+        display: flex;
+        min-height: 100vh;
+    }
+
+
+    /* =========================
+       SIDEBAR
+    ========================== */
+
+    .sidebar {
+        width: 250px;
+        background-color: #004F3F;
+        color: white;
+        padding: 25px 18px;
+        display: flex;
+        flex-direction: column;
+    }
+
+
+    /* =========================
+       LOGO
+    ========================== */
+
+    .logo {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .logo img {
+        width: 150px;
+        height: auto;
+        display: block;
+        margin: 0 auto 12px;
+    }
+
+    .logo span {
+        display: block;
+        margin-top: 5px;
+        font-size: 12px;
+        opacity: 0.75;
+    }
+
+
+    /* =========================
+       MENÚ
+    ========================== */
+
+    .menu-title {
+        font-size: 11px;
+        text-transform: uppercase;
+        opacity: 0.65;
+        margin: 0 12px 12px;
+    }
+
+    .menu {
+        list-style: none;
+    }
+
+    .menu li {
+        margin-bottom: 6px;
+    }
+
+    .menu a {
+        display: block;
+        padding: 12px 14px;
+        border-radius: 8px;
+        color: white;
+        text-decoration: none;
+        font-size: 15px;
+        transition: 0.2s;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+        background-color: #0a6755;
+    }
+
+
+    /* =========================
+       CERRAR SESIÓN
+    ========================== */
+
+    .logout {
+        margin-top: auto;
+    }
+
+    .logout a {
+        display: block;
+        padding: 12px 14px;
+        border-radius: 8px;
+        color: white;
+        text-decoration: none;
+        background-color: rgba(255, 255, 255, 0.08);
+        transition: 0.2s;
+    }
+
+    .logout a:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+    }
+
+
+    /* =========================
+       CONTENIDO PRINCIPAL
+    ========================== */
+
+    .main {
+        flex: 1;
+        padding: 30px;
+    }
+
+
+    /* =========================
+       TOPBAR
+    ========================== */
+
+    .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .topbar h2 {
+        font-size: 25px;
+    }
+
+    .user-info {
+        text-align: right;
+    }
+
+    .user-info strong {
+        display: block;
+        font-size: 15px;
+    }
+
+    .user-info span {
+        font-size: 13px;
+        color: #6b7280;
+    }
+
+
+    /* =========================
+       BIENVENIDA
+    ========================== */
+
+    .welcome {
+        background-color: white;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 25px;
+        border: 1px solid #e5e7eb;
+    }
+
+    .welcome h3 {
+        margin-bottom: 8px;
+    }
+
+    .welcome p {
+        color: #6b7280;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+
+    /* =========================
+       INFORMACIÓN DEL USUARIO
+    ========================== */
+
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        margin-bottom: 30px;
+    }
+
+    .card {
+        background-color: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 22px;
+    }
+
+    .card-title {
+        color: #6b7280;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    .card-value {
+        font-size: 17px;
+        font-weight: bold;
+        color: #004F3F;
+    }
+
+
+    /* =========================
+       SECCIÓN PRINCIPAL
+    ========================== */
+
+    .section {
+        background-color: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 25px;
+    }
+
+    .section h3 {
+        margin-bottom: 20px;
+    }
+
+
+    /* =========================
+       MÓDULOS
+    ========================== */
+
+    .modules {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+
+    .module {
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 18px;
+        transition: 0.2s;
+    }
+
+    .module:hover {
+        border-color: #004F3F;
+        transform: translateY(-2px);
+    }
+
+    .module h4 {
+        margin-bottom: 7px;
+        color: #1f2937;
+    }
+
+    .module p {
+        font-size: 13px;
+        color: #6b7280;
+        line-height: 1.5;
+        margin-bottom: 15px;
+    }
+
+    .module a {
+        display: inline-block;
+        text-decoration: none;
+        color: #004F3F;
+        font-weight: bold;
+        font-size: 13px;
+    }
+
+    .module a:hover {
+        text-decoration: underline;
+    }
+
+
+    /* =========================
+       MÓDULO DESTACADO
+    ========================== */
+
+    .module-featured {
+        border: 2px solid #004F3F;
+        background-color: #f8fbfa;
+    }
+
+    .module-featured h4 {
+        color: #004F3F;
+    }
+
+
+    /* =========================
+       ESTADO
+    ========================== */
+
+    .status {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 20px;
+        background-color: #e8f5f1;
+        color: #004F3F;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+
+    /* =========================
+       RESPONSIVE
+    ========================== */
+
+    @media (max-width: 900px) {
+
+        .sidebar {
+            width: 210px;
+        }
+
+        .cards,
+        .modules {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+    }
+
+
+    @media (max-width: 650px) {
+
+        .layout {
+            flex-direction: column;
+        }
+
+        .sidebar {
+            width: 100%;
+        }
+
+        .logout {
+            margin-top: 20px;
+        }
+
+        .topbar {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .user-info {
+            text-align: left;
+        }
+
+        .cards,
+        .modules {
+            grid-template-columns: 1fr;
+        }
+
+        .main {
+            padding: 20px;
+        }
+
+    }
+
+</style>
+
+</head>
+
+<body>
+
+<div class="layout">
+
+<!-- =========================
+     BARRA LATERAL
+========================== -->
+
+<aside class="sidebar">
+
+<div class="logo">
+
+    <img
+        src="{% static 'usuarios/img/logo.png' %}"
+        alt="Logo ViveSport"
+    >
+
+    <span>
+        Panel de usuario
+    </span>
+
+</div>
+
+
+<div class="menu-title">
+    Mi ViveSport
+</div>
+
+
+<ul class="menu">
+
+
+    <!-- INICIO -->
+
+    <li>
+
+        <a
+            href="{% url 'inicio' %}"
+            class="active"
+        >
+            Inicio
+        </a>
+
+    </li>
+
+
+    <!-- TORNEOS -->
+
+    <li>
+
+        <a href="{% url 'torneos_disponibles' %}">
+            Torneos
+        </a>
+
+    </li>
+
+
+    <!-- EQUIPOS -->
+
+    <li>
+
+    <a href="{% url 'mis_equipos' %}">
+        Mis equipos
+    </a>
+
+</li>
+
+
+    <!-- INSCRIPCIONES -->
+
+    <li>
+
+        <a href="{% url 'mis_inscripciones' %}">
+            Mis inscripciones
+        </a>
+
+    </li>
+
+
+    <!-- PARTIDOS -->
+
+    <li>
+
+        <a href="{% url 'mis_partidos' %}">Mis partidos</a>
+
+
+    </li>
+
+
+    <!-- RESULTADOS -->
+
+    <li>
+
+        <a href="{% url 'resultados_usuario' %}">Resultados</a>
+
+
+    </li>
+
+    <li>
+
+<a href="{% url 'grupos_clasificaciones_usuario' %}">Grupos y clasificaciones</a>
+
+    </li>
+
+
+</ul>
+
+
+<!-- CERRAR SESIÓN -->
+
+<div class="logout">
+
+    <a href="{% url 'logout' %}">
+        Cerrar sesión
+    </a>
+
+</div>
+</aside>
+
+<!-- =========================
+     CONTENIDO PRINCIPAL
+========================== -->
+
+<main class="main">
+
+
+<!-- =========================
+     TOPBAR
+========================== -->
+
+<div class="topbar">
+
+
+    <h2>
+        Panel de Usuario
+    </h2>
+
+
+    <div class="user-info">
+
+        <strong>
+            {{ user.nombre }} {{ user.apellido }}
+        </strong>
+
+        <span>
+            {{ user.correo }}
+        </span>
+
+    </div>
+
+
+</div>
+
+
+<!-- =========================
+     BIENVENIDA
+========================== -->
+
+<section class="welcome">
+
+
+    <h3>
+        Bienvenido, {{ user.nombre }}
+    </h3>
+
+
+    <p>
+
+        Desde este panel puedes consultar
+        los torneos disponibles, gestionar
+        tus equipos y realizar inscripciones
+        a las competencias de ViveSport.
+
+    </p>
+
+
+</section>
+
+
+<!-- =========================
+     INFORMACIÓN PERSONAL
+========================== -->
+
+<section class="cards">
+
+
+    <div class="card">
+
+        <div class="card-title">
+            Centro de formación
+        </div>
+
+        <div class="card-value">
+            {{ user.centro_formacion }}
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="card-title">
+            Jornada
+        </div>
+
+        <div class="card-value">
+            {{ user.jornada }}
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="card-title">
+            Número de ficha
+        </div>
+
+        <div class="card-value">
+            {{ user.ficha }}
+        </div>
+
+    </div>
+
+
+</section>
+
+
+<!-- =========================
+     ACCESOS PRINCIPALES
+========================== -->
+
+<section class="section">
+
+
+    <h3>
+        Opciones de ViveSport
+    </h3>
+
+
+    <div class="modules">
+
+
+        <!-- =====================
+             TORNEOS
+        ====================== -->
+
+        <div class="module module-featured">
+
+
+            <h4>
+                Torneos disponibles
+            </h4>
+
+
+            <p>
+
+                Consulta los torneos que
+                actualmente tienen las
+                inscripciones abiertas.
+
+            </p>
+
+
+            <a href="{% url 'torneos_disponibles' %}">
+
+                Ver torneos →
+
+            </a>
+
+
+        </div>
+
+
+        <!-- =====================
+             MIS EQUIPOS
+        ====================== -->
+
+        <div class="module">
+
+    <h4>
+        Mis equipos
+    </h4>
+
+    <p>
+
+        Consulta y administra
+        los equipos asociados
+        a tu cuenta.
+
+    </p>
+
+    <a href="{% url 'mis_equipos' %}">
+
+        Ver mis equipos →
+
+    </a>
+
+</div>
+
+
+        <!-- =====================
+             MIS INSCRIPCIONES
+        ====================== -->
+
+        <div class="module">
+
+
+            <h4>
+                Mis inscripciones
+            </h4>
+
+
+            <p>
+
+                Consulta el estado de
+                las inscripciones que
+                hayas realizado.
+
+            </p>
+
+
+            <a href="{% url 'mis_inscripciones' %}">
+    Ver mis inscripciones →
+</a>
+
+
+        </div>
+
+
+        <!-- =====================
+             MIS PARTIDOS
+        ====================== -->
+
+        <div class="module">
+
+
+            <h4>
+                Mis partidos
+            </h4>
+
+
+            <p>
+
+                Consulta los partidos
+                programados para tus
+                equipos.
+
+            </p>
+
+
+<a href="{% url 'mis_partidos' %}">
+    Ver mis partidos →
+
+            </a>
+
+
+        </div>
+
+
+        <!-- =====================
+             RESULTADOS
+        ====================== -->
+
+        <div class="module">
+
+
+            <h4>
+                Resultados
+            </h4>
+
+
+            <p>
+
+                Consulta los resultados
+                y el desempeño de tus
+                equipos.
+
+            </p>
+
+
+            <a href="{% url 'resultados_usuario' %}">
+
+                    Ver mis resultados →
+
+            </a>
+
+
+        </div>
+
+
+        <!-- =====================
+             MI PERFIL
+        ====================== -->
+
+        <div class="module">
+
+
+            <h4>Grupos y clasificaciones</h4>
+<p>Consulta las posiciones y estadísticas de tus equipos en los torneos.</p>
+<a href="{% url 'grupos_clasificaciones_usuario' %}">
+    Ver clasificaciones
+</a>
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+</main>
+
+</div>
+
+</body>
+
+</html>

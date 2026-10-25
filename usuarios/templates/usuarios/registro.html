@@ -1,0 +1,421 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Crear cuenta - ViveSport</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'usuarios/css/auth.css' %}"
+    >
+
+</head>
+
+
+<body>
+
+    <main class="auth-page">
+
+        <section class="auth-card register-card">
+
+
+            <!-- =========================
+                 MARCA
+            ========================== -->
+
+            <div class="brand">
+
+                <img
+                    src="{% static 'usuarios/img/logo.png' %}"
+                    alt="Logo ViveSport"
+                    class="brand-logo"
+                >
+
+                <h1>VIVESPORT</h1>
+
+                <span>
+                    TORNEOS DEPORTIVOS | SENA
+                </span>
+
+            </div>
+
+
+            <!-- =========================
+                 ENCABEZADO
+            ========================== -->
+
+            <div class="auth-title">
+
+                <h2>Crear cuenta</h2>
+
+                <p>
+                    Regístrate para participar en ViveSport
+                </p>
+
+            </div>
+
+
+            <!-- =========================
+                 FORMULARIO
+            ========================== -->
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+
+                <!-- FILA 1 -->
+
+                <div class="form-row">
+
+
+                    <!-- NOMBRE -->
+
+                    <div class="input-group">
+
+                        <label for="{{ form.nombre.id_for_label }}">
+                            Nombre
+                        </label>
+
+                        {{ form.nombre }}
+
+                        {% if form.nombre.errors %}
+
+                            <div class="field-error">
+
+                                {% for error in form.nombre.errors %}
+                                    {{ error }}
+                                {% endfor %}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- APELLIDO -->
+
+                    <div class="input-group">
+
+                        <label for="{{ form.apellido.id_for_label }}">
+                            Apellido
+                        </label>
+
+                        {{ form.apellido }}
+
+                        {% if form.apellido.errors %}
+
+                            <div class="field-error">
+
+                                {% for error in form.apellido.errors %}
+                                    {{ error }}
+                                {% endfor %}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- CORREO -->
+
+                <div class="input-group">
+
+                    <label for="{{ form.correo.id_for_label }}">
+                        Correo electrónico
+                    </label>
+
+                    {{ form.correo }}
+
+                    {% if form.correo.errors %}
+
+                        <div class="field-error">
+
+                            {% for error in form.correo.errors %}
+                                {{ error }}
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- CELULAR -->
+
+                <div class="input-group">
+
+                    <label for="{{ form.celular.id_for_label }}">
+                        Número de celular
+                    </label>
+
+                    {{ form.celular }}
+
+                    {% if form.celular.errors %}
+
+                        <div class="field-error">
+
+                            {% for error in form.celular.errors %}
+                                {{ error }}
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- FILA 2 -->
+
+                <div class="form-row">
+
+
+                    <!-- CENTRO -->
+
+                    <div class="input-group">
+
+                        <label for="{{ form.centro_formacion.id_for_label }}">
+                            Centro de Formación
+                        </label>
+
+                        {{ form.centro_formacion }}
+
+                        {% if form.centro_formacion.errors %}
+
+                            <div class="field-error">
+
+                                {% for error in form.centro_formacion.errors %}
+                                    {{ error }}
+                                {% endfor %}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- JORNADA -->
+
+                    <div class="input-group">
+
+                        <label for="{{ form.jornada.id_for_label }}">
+                            Jornada
+                        </label>
+
+                        {{ form.jornada }}
+
+                        {% if form.jornada.errors %}
+
+                            <div class="field-error">
+
+                                {% for error in form.jornada.errors %}
+                                    {{ error }}
+                                {% endfor %}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- FICHA -->
+
+                <div class="input-group">
+
+                    <label for="{{ form.ficha.id_for_label }}">
+                        N° de Ficha
+                    </label>
+
+                    {{ form.ficha }}
+
+                    {% if form.ficha.errors %}
+
+                        <div class="field-error">
+
+                            {% for error in form.ficha.errors %}
+                                {{ error }}
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- CONTRASEÑA -->
+
+                <div class="input-group">
+
+                    <label for="{{ form.password.id_for_label }}">
+                        Contraseña
+                    </label>
+
+                    <div class="password-container">
+
+                        {{ form.password }}
+
+                        <button
+                            type="button"
+                            class="toggle-password"
+                            onclick="togglePassword('id_password', this)"
+                        >
+                            Mostrar
+                        </button>
+
+                    </div>
+
+                    {% if form.password.errors %}
+
+                        <div class="field-error">
+
+                            {% for error in form.password.errors %}
+                                {{ error }}
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- CONFIRMAR CONTRASEÑA -->
+
+                <div class="input-group">
+
+                    <label for="{{ form.confirmar_password.id_for_label }}">
+                        Confirmar contraseña
+                    </label>
+
+                    <div class="password-container">
+
+                        {{ form.confirmar_password }}
+
+                        <button
+                            type="button"
+                            class="toggle-password"
+                            onclick="togglePassword('id_confirmar_password', this)"
+                        >
+                            Mostrar
+                        </button>
+
+                    </div>
+
+                    {% if form.confirmar_password.errors %}
+
+                        <div class="field-error">
+
+                            {% for error in form.confirmar_password.errors %}
+                                {{ error }}
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- ERROR GENERAL -->
+
+                {% if form.non_field_errors %}
+
+                    <div class="alert-error">
+
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- BOTÓN -->
+
+                <button
+                    type="submit"
+                    class="btn-login"
+                >
+                    CREAR CUENTA
+                </button>
+
+            </form>
+
+
+            <!-- =========================
+                 LOGIN
+            ========================== -->
+
+            <div class="auth-register">
+
+                <span>
+                    ¿Ya tienes una cuenta?
+                </span>
+
+                <a href="{% url 'login' %}">
+                    Iniciar sesión
+                </a>
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         MOSTRAR CONTRASEÑA
+    ========================== -->
+
+    <script>
+
+        function togglePassword(inputId, button) {
+
+            const password =
+                document.getElementById(inputId);
+
+
+            if (password.type === "password") {
+
+                password.type = "text";
+
+                button.textContent = "Ocultar";
+
+            } else {
+
+                password.type = "password";
+
+                button.textContent = "Mostrar";
+
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,591 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>ViveSport | Equipos</title>
+
+<style>
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #f4f6f8;
+        color: #1f2937;
+    }
+
+    .layout {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    /* =========================
+       SIDEBAR
+    ========================= */
+
+    .sidebar {
+        width: 250px;
+        background-color: #004F3F;
+        color: white;
+        padding: 25px 18px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .logo {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .logo img {
+        width: 150px;
+        height: auto;
+        display: block;
+        margin: 0 auto 12px;
+    }
+
+    .logo span {
+        display: block;
+        margin-top: 5px;
+        font-size: 12px;
+        opacity: 0.75;
+    }
+
+    .menu-title {
+        font-size: 11px;
+        text-transform: uppercase;
+        opacity: 0.65;
+        margin: 0 12px 12px;
+    }
+
+    .menu {
+        list-style: none;
+    }
+
+    .menu li {
+        margin-bottom: 6px;
+    }
+
+    .menu a {
+        display: block;
+        padding: 12px 14px;
+        border-radius: 8px;
+        color: white;
+        text-decoration: none;
+        font-size: 15px;
+        transition: 0.2s;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+        background-color: #0a6755;
+    }
+
+    .logout {
+        margin-top: auto;
+    }
+
+    .logout a {
+        display: block;
+        padding: 12px 14px;
+        border-radius: 8px;
+        color: white;
+        text-decoration: none;
+        background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .logout a:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+    }
+
+    /* =========================
+       CONTENIDO
+    ========================= */
+
+    .main {
+        flex: 1;
+        padding: 30px;
+    }
+
+    .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .topbar h2 {
+        font-size: 25px;
+    }
+
+    .admin-info {
+        text-align: right;
+    }
+
+    .admin-info strong {
+        display: block;
+        font-size: 15px;
+    }
+
+    .admin-info span {
+        font-size: 13px;
+        color: #6b7280;
+    }
+
+    /* =========================
+       ENCABEZADO
+    ========================= */
+
+    .page-header {
+        background-color: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 25px;
+    }
+
+    .page-header h3 {
+        margin-bottom: 8px;
+        font-size: 21px;
+    }
+
+    .page-header p {
+        color: #6b7280;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    /* =========================
+       TORNEOS
+    ========================= */
+
+    .tournaments {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .tournament-card {
+        background-color: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 22px;
+        transition: 0.2s;
+    }
+
+    .tournament-card:hover {
+        border-color: #004F3F;
+        transform: translateY(-2px);
+    }
+
+    .tournament-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 15px;
+        margin-bottom: 18px;
+    }
+
+    .tournament-name {
+        font-size: 18px;
+        font-weight: bold;
+        color: #1f2937;
+    }
+
+    .sport {
+        display: inline-block;
+        margin-top: 7px;
+        font-size: 12px;
+        color: #004F3F;
+        font-weight: bold;
+    }
+
+    .team-count {
+        min-width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        background-color: #e8f3f0;
+        color: #004F3F;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        flex-shrink: 0;
+    }
+
+    .team-count strong {
+        font-size: 20px;
+    }
+
+    .team-count span {
+        font-size: 9px;
+    }
+
+    .tournament-info {
+        border-top: 1px solid #e5e7eb;
+        padding-top: 15px;
+        margin-bottom: 18px;
+    }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        font-size: 13px;
+    }
+
+    .info-label {
+        color: #6b7280;
+    }
+
+    .info-value {
+        font-weight: bold;
+    }
+
+    .view-button {
+        display: block;
+        width: 100%;
+        text-align: center;
+        text-decoration: none;
+        background-color: #004F3F;
+        color: white;
+        padding: 11px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: bold;
+        transition: 0.2s;
+    }
+
+    .view-button:hover {
+        background-color: #0a6755;
+    }
+
+    .empty {
+        background-color: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 40px;
+        text-align: center;
+        color: #6b7280;
+    }
+
+    .empty h3 {
+        color: #1f2937;
+        margin-bottom: 8px;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 1000px) {
+
+        .sidebar {
+            width: 210px;
+        }
+
+        .tournaments {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 650px) {
+
+        .layout {
+            flex-direction: column;
+        }
+
+        .sidebar {
+            width: 100%;
+        }
+
+        .logout {
+            margin-top: 20px;
+        }
+
+        .topbar {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .admin-info {
+            text-align: left;
+        }
+
+        .main {
+            padding: 20px;
+        }
+    }
+
+</style>
+
+</head>
+
+<body>
+
+<div class="layout">
+
+<!-- =========================
+     BARRA LATERAL
+========================== -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <img
+            src="{% static 'usuarios/img/logo.png' %}"
+            alt="Logo ViveSport"
+        >
+
+        <span>
+            Panel administrativo
+        </span>
+
+    </div>
+
+    <div class="menu-title">
+        Administración
+    </div>
+
+    <ul class="menu">
+
+        <li>
+            <a href="{% url 'admin_dashboard' %}">
+                Inicio
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'usuarios_admin' %}">
+                Usuarios
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'equipos_admin' %}" class="active">
+                Equipos
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'torneos_admin' %}">
+                Torneos
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'inscripciones_admin' %}">
+                Inscripciones
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'inscripciones_equipos_admin' %}">
+                Equipos inscritos
+            </a>
+        </li>
+
+        <li>
+    <a href="{% url 'configuraciones_competicion' %}">
+        Competición
+    </a>
+</li>
+
+        <li>
+    <a href="{% url 'partidos_torneos_admin' %}">
+        Partidos
+    </a>
+</li>
+<li>
+    <a href="{% url 'grupos_admin' %}">
+        Grupos
+    </a>
+</li>
+
+        <li>
+            <a href="{% url 'resultados_admin' %}">
+                Resultados
+            </a>
+        </li>
+
+    </ul>
+
+    <div class="logout">
+
+        <a href="{% url 'logout' %}">
+            Cerrar sesión
+        </a>
+
+    </div>
+
+</aside>
+
+
+<!-- =========================
+     CONTENIDO
+========================== -->
+
+<main class="main">
+
+    <div class="topbar">
+
+        <h2>
+            Equipos
+        </h2>
+
+        <div class="admin-info">
+
+            <strong>
+                {{ user.nombre }} {{ user.apellido }}
+            </strong>
+
+            <span>
+                {{ user.correo }}
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <section class="page-header">
+
+        <h3>
+            Equipos participantes
+        </h3>
+
+        <p>
+            Selecciona un torneo para consultar
+            los equipos que fueron aceptados por
+            el administrador.
+        </p>
+
+    </section>
+
+
+    {% if torneos %}
+
+        <section class="tournaments">
+
+            {% for torneo in torneos %}
+
+                <article class="tournament-card">
+
+                    <div class="tournament-header">
+
+                        <div>
+
+                            <div class="tournament-name">
+                                {{ torneo.nombre }}
+                            </div>
+
+                            <span class="sport">
+                                {{ torneo.get_deporte_display }}
+                            </span>
+
+                        </div>
+
+                        <div class="team-count">
+
+                            <strong>
+                                {{ torneo.equipos_aceptados }}
+                            </strong>
+
+                            <span>
+                                EQUIPOS
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="tournament-info">
+
+                        <div class="info-row">
+
+                            <span class="info-label">
+                                Fecha de inicio
+                            </span>
+
+                            <span class="info-value">
+                                {{ torneo.fecha_inicio|date:"d/m/Y" }}
+                            </span>
+
+                        </div>
+
+                        <div class="info-row">
+
+                            <span class="info-label">
+                                Estado
+                            </span>
+
+                            <span class="info-value">
+
+                                {% if torneo.equipos_aceptados > 0 %}
+                                    Con equipos
+                                {% else %}
+                                    Sin equipos
+                                {% endif %}
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <a
+                        href="{% url 'equipos_torneo_admin' torneo.id %}"
+                        class="view-button"
+                    >
+                        Ver equipos →
+                    </a>
+
+                </article>
+
+            {% endfor %}
+
+        </section>
+
+    {% else %}
+
+        <div class="empty">
+
+            <h3>
+                No hay torneos registrados
+            </h3>
+
+            <p>
+                Actualmente no existen torneos
+                disponibles para consultar.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</main>
+
+</div>
+
+</body>
+
+</html>

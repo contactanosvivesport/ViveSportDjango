@@ -1,0 +1,374 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>ViveSport | Desactivar usuario</title>
+
+<style>
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f4f6f8;
+        color: #1f2937;
+    }
+
+    .layout {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    .sidebar {
+        width: 250px;
+        background: #004F3F;
+        color: white;
+        padding: 25px 18px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .logo {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .logo img {
+        width: 150px;
+        display: block;
+        margin: auto;
+    }
+
+    .logo span {
+        display: block;
+        margin-top: 12px;
+        font-size: 12px;
+        opacity: .75;
+    }
+
+    .menu-title {
+        font-size: 11px;
+        text-transform: uppercase;
+        opacity: .65;
+        margin: 0 12px 12px;
+    }
+
+    .menu {
+        list-style: none;
+    }
+
+    .menu li {
+        margin-bottom: 6px;
+    }
+
+    .menu a {
+        display: block;
+        padding: 12px 14px;
+        border-radius: 8px;
+        color: white;
+        text-decoration: none;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+        background: #0a6755;
+    }
+
+    .logout {
+    width: 100%;
+    margin-top: auto;
+}
+
+.logout a {
+    width: 100%;
+    display: block;
+    padding: 12px 14px;
+    border-radius: 8px;
+    color: white;
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, 0.08);
+    font-size: 15px;
+    transition: background-color 0.2s ease;
+}
+
+.logout a:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+    .main {
+        flex: 1;
+        padding: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .card {
+        width: 100%;
+        max-width: 600px;
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 35px;
+        text-align: center;
+    }
+
+    .icon {
+        width: 65px;
+        height: 65px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+        background: #fee2e2;
+        color: #b91c1c;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 30px;
+        font-weight: bold;
+    }
+
+    h2 {
+        margin-bottom: 12px;
+    }
+
+    .description {
+        color: #6b7280;
+        line-height: 1.6;
+        margin-bottom: 25px;
+    }
+
+    .user-name {
+        font-weight: bold;
+        color: #004F3F;
+    }
+
+    .actions {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .btn {
+        padding: 12px 20px;
+        border-radius: 8px;
+        border: none;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .btn-danger {
+        background: #b91c1c;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background: #991b1b;
+    }
+
+    .btn-secondary {
+        background: #e5e7eb;
+        color: #374151;
+    }
+
+    @media (max-width: 700px) {
+
+        .layout {
+            flex-direction: column;
+        }
+
+        .sidebar {
+            width: 100%;
+        }
+
+        .main {
+            padding: 20px;
+        }
+
+        .actions {
+            flex-direction: column;
+        }
+
+    }
+
+</style>
+
+
+</head>
+
+<body>
+
+<div class="layout">
+
+<!-- =========================
+     SIDEBAR
+========================== -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <img
+            src="{% static 'usuarios/img/logo.png' %}"
+            alt="Logo ViveSport"
+        >
+
+        <span>
+            Panel administrativo
+        </span>
+
+    </div>
+
+    <div class="menu-title">
+        Administración
+    </div>
+
+    <ul class="menu">
+
+        <li>
+            <a href="{% url 'admin_dashboard' %}">
+                Inicio
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'usuarios_admin' %}" class="active">
+                Usuarios
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'equipos_admin' %}">
+                Equipos
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'torneos_admin' %}">
+                Torneos
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'inscripciones_admin' %}">
+                Inscripciones
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'inscripciones_equipos_admin' %}">
+                Equipos inscritos
+            </a>
+        </li>
+        <li>
+    <a href="{% url 'configuraciones_competicion' %}">
+        Competición
+    </a>
+</li>
+
+        <li>
+    <a href="{% url 'partidos_torneos_admin' %}">
+        Partidos
+    </a>
+</li>
+<li>
+    <a href="{% url 'grupos_admin' %}">
+        Grupos
+    </a>
+</li>
+
+        <li>
+            <a href="{% url 'resultados_admin' %}">
+                Resultados
+            </a>
+        </li>
+
+    </ul>
+
+    <div class="logout">
+
+        <a href="{% url 'logout' %}">
+            Cerrar sesión
+        </a>
+
+    </div>
+
+</aside>
+
+
+<main class="main">
+
+    
+<div class="card">
+
+    <div class="icon">
+        !
+    </div>
+
+    <h2>
+        ¿Desactivar esta cuenta?
+    </h2>
+
+    <p class="description">
+        Vas a desactivar la cuenta de
+
+        <span class="user-name">
+            {{ usuario.nombre }} {{ usuario.apellido }}
+        </span>.
+
+        El usuario no podrá iniciar sesión mientras su cuenta
+        esté desactivada. Sus equipos, inscripciones y registros
+        históricos se conservarán.
+
+        Si tiene inscripciones pendientes o inscripciones
+        asociadas a torneos en curso, la operación será bloqueada.
+    </p>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="actions">
+
+            <a
+                href="{% url 'usuarios_admin' %}"
+                class="btn btn-secondary"
+            >
+                Cancelar
+            </a>
+
+            <button
+                type="submit"
+                class="btn btn-danger"
+            >
+                Sí, desactivar cuenta
+            </button>
+
+        </div>
+    </form>
+
+</div>
+
+
+</main>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,1082 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+    ViveSport | Mis equipos
+</title>
+
+<style>
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #f4f6f8;
+        color: #1f2937;
+    }
+
+
+    .layout {
+        display: flex;
+        min-height: 100vh;
+    }
+
+
+    /* =========================
+       SIDEBAR
+    ========================== */
+
+    .sidebar {
+        width: 250px;
+        min-width: 250px;
+        background-color: #004F3F;
+        color: white;
+        padding: 25px 18px;
+        display: flex;
+        flex-direction: column;
+    }
+
+
+    /* =========================
+       LOGO
+    ========================== */
+
+    .logo {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+
+    .logo img {
+        width: 150px;
+        height: auto;
+        display: block;
+        margin: 0 auto 12px;
+    }
+
+
+    .logo span {
+        display: block;
+        margin-top: 5px;
+        font-size: 12px;
+        opacity: 0.75;
+    }
+
+
+    /* =========================
+       MENÚ
+    ========================== */
+
+    .menu-title {
+        font-size: 11px;
+        text-transform: uppercase;
+        opacity: 0.65;
+        margin: 0 12px 12px;
+    }
+
+
+    .menu {
+        list-style: none;
+    }
+
+
+    .menu li {
+        margin-bottom: 6px;
+    }
+
+
+    .menu a {
+        display: block;
+        padding: 12px 14px;
+        border-radius: 8px;
+        color: white;
+        text-decoration: none;
+        font-size: 15px;
+        transition: 0.2s;
+    }
+
+
+    .menu a:hover,
+    .menu a.active {
+        background-color: #0a6755;
+    }
+
+
+    /* =========================
+       CERRAR SESIÓN
+    ========================== */
+
+    .logout {
+        margin-top: auto;
+    }
+
+
+    .logout a {
+        display: block;
+        padding: 12px 14px;
+        border-radius: 8px;
+        color: white;
+        text-decoration: none;
+        background-color: rgba(255, 255, 255, 0.08);
+        transition: 0.2s;
+    }
+
+
+    .logout a:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+    }
+
+
+    /* =========================
+       CONTENIDO PRINCIPAL
+    ========================== */
+
+    .main {
+        flex: 1;
+        padding: 30px;
+        min-width: 0;
+    }
+
+
+    /* =========================
+       TOPBAR
+    ========================== */
+
+    .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+
+    .topbar h2 {
+        font-size: 25px;
+        color: #1f2937;
+    }
+
+
+    .user-info {
+        text-align: right;
+    }
+
+
+    .user-info strong {
+        display: block;
+        font-size: 15px;
+        color: #1f2937;
+    }
+
+
+    .user-info span {
+        font-size: 13px;
+        color: #6b7280;
+    }
+
+
+    /* =========================
+       ENCABEZADO
+    ========================== */
+
+    .page-header {
+        background-color: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 25px;
+    }
+
+
+    .page-header h3 {
+        margin-bottom: 8px;
+        color: #1f2937;
+    }
+
+
+    .page-header p {
+        color: #6b7280;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+
+    /* =========================
+       MENSAJES
+    ========================== */
+
+    .messages {
+        margin-bottom: 25px;
+    }
+
+
+    .message {
+        padding: 14px 16px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        font-size: 14px;
+        line-height: 1.5;
+        border: 1px solid;
+    }
+
+
+    .message.success {
+        background-color: #ecfdf5;
+        border-color: #a7f3d0;
+        color: #047857;
+    }
+
+
+    .message.error {
+        background-color: #fef2f2;
+        border-color: #fecaca;
+        color: #b91c1c;
+    }
+
+
+    .message.warning {
+        background-color: #fffbeb;
+        border-color: #fde68a;
+        color: #b45309;
+    }
+
+
+    .message.info {
+        background-color: #eff6ff;
+        border-color: #bfdbfe;
+        color: #1d4ed8;
+    }
+
+
+    /* =========================
+       EQUIPOS
+    ========================== */
+
+    .equipos {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+
+    .equipo-card {
+        background-color: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 22px;
+        transition: 0.2s;
+    }
+
+
+    .equipo-card:hover {
+        border-color: #b8d8d1;
+        transform: translateY(-2px);
+    }
+
+
+    .equipo-card h3 {
+        color: #004F3F;
+        font-size: 20px;
+        margin-bottom: 18px;
+    }
+
+
+    /* =========================
+       INFORMACIÓN
+    ========================== */
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 14px;
+    }
+
+
+    .info-row:last-child {
+        border-bottom: none;
+    }
+
+
+    .info-label {
+        color: #6b7280;
+        font-weight: 600;
+    }
+
+
+    .info-value {
+        text-align: right;
+        color: #1f2937;
+        font-weight: 500;
+    }
+
+
+    /* =========================
+       ESTADOS
+    ========================== */
+
+    .status {
+        display: inline-block;
+        padding: 6px 11px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+        white-space: nowrap;
+    }
+
+
+    .status-pending {
+        background-color: #fffbeb;
+        color: #b45309;
+        border: 1px solid #fde68a;
+    }
+
+
+    .status-approved {
+        background-color: #ecfdf5;
+        color: #047857;
+        border: 1px solid #a7f3d0;
+    }
+
+
+    .status-rejected {
+        background-color: #fef2f2;
+        color: #b91c1c;
+        border: 1px solid #fecaca;
+    }
+
+
+    .status-default {
+        background-color: #eff6ff;
+        color: #1d4ed8;
+        border: 1px solid #bfdbfe;
+    }
+
+
+    /* =========================
+       INTEGRANTES
+    ========================== */
+
+    .members {
+        margin-top: 18px;
+        padding-top: 18px;
+        border-top: 1px solid #f0f0f0;
+    }
+
+
+    .members-title {
+        color: #6b7280;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+
+
+    .members-list {
+        list-style: none;
+    }
+
+
+    .members-list li {
+        padding: 8px 10px;
+        margin-bottom: 6px;
+        background-color: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 7px;
+        font-size: 13px;
+        color: #374151;
+    }
+
+
+    .members-list li:last-child {
+        margin-bottom: 0;
+    }
+
+
+    /* =========================
+       SIN INSCRIPCIÓN
+    ========================== */
+
+    .no-registration {
+        margin-top: 18px;
+        padding: 12px 14px;
+        border-radius: 8px;
+        background-color: #f9fafb;
+        border: 1px solid #e5e7eb;
+        color: #6b7280;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+
+    /* =========================
+       SIN EQUIPOS
+    ========================== */
+
+    .empty-state {
+        background-color: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 50px 25px;
+        text-align: center;
+    }
+
+
+    .empty-state h3 {
+        margin-bottom: 10px;
+        color: #374151;
+    }
+
+
+    .empty-state p {
+        color: #6b7280;
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+
+
+    /* =========================
+       BOTONES
+    ========================== */
+
+    .btn {
+        display: inline-block;
+        padding: 11px 16px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+        transition: 0.2s;
+        border: none;
+        cursor: pointer;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+
+    .btn-primary {
+        background-color: #004F3F;
+        color: white;
+    }
+
+
+    .btn-primary:hover {
+        background-color: #0a6755;
+    }
+
+
+    /* =========================
+       ACCIONES DEL EQUIPO
+    ========================== */
+
+    .equipo-actions {
+        margin-top: 20px;
+        padding-top: 18px;
+        border-top: 1px solid #f0f0f0;
+    }
+
+
+    /* =========================
+       VOLVER
+    ========================== */
+
+    .back-link {
+        display: inline-block;
+        margin-top: 25px;
+        color: #004F3F;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+
+    .back-link:hover {
+        text-decoration: underline;
+    }
+
+
+    /* =========================
+       RESPONSIVE
+    ========================== */
+
+    @media (max-width: 1000px) {
+
+        .sidebar {
+            width: 220px;
+            min-width: 220px;
+        }
+
+
+        .equipos {
+            grid-template-columns: 1fr;
+        }
+
+    }
+
+
+    @media (max-width: 700px) {
+
+        .layout {
+            flex-direction: column;
+        }
+
+
+        .sidebar {
+            width: 100%;
+            min-width: 100%;
+        }
+
+
+        .logo {
+            margin-bottom: 25px;
+        }
+
+
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+        }
+
+
+        .menu li {
+            margin-bottom: 0;
+        }
+
+
+        .logout {
+            margin-top: 20px;
+        }
+
+
+        .topbar {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+
+        .user-info {
+            text-align: left;
+        }
+
+
+        .main {
+            padding: 20px;
+        }
+
+
+        .equipos {
+            grid-template-columns: 1fr;
+        }
+
+    }
+
+
+    @media (max-width: 500px) {
+
+        .menu {
+            grid-template-columns: 1fr;
+        }
+
+
+        .page-header {
+            padding: 20px;
+        }
+
+
+        .equipo-card {
+            padding: 18px;
+        }
+
+
+        .info-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+        }
+
+
+        .info-value {
+            text-align: left;
+        }
+
+
+        .status {
+            white-space: normal;
+        }
+
+    }
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="layout">
+
+
+<!-- =========================
+     SIDEBAR
+========================== -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+        <img
+            src="{% static 'usuarios/img/logo.png' %}"
+            alt="Logo ViveSport"
+        >
+
+        <span>Panel de usuario</span>
+    </div>
+
+    <div class="menu-title">
+        Mi ViveSport
+    </div>
+
+    <ul class="menu">
+
+        <li>
+            <a href="{% url 'inicio' %}">
+                Inicio
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'torneos_disponibles' %}">
+                Torneos
+            </a>
+        </li>
+
+        <li>
+            <a
+                href="{% url 'mis_equipos' %}"
+                class="active"
+                aria-current="page"
+            >
+                Mis equipos
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'mis_inscripciones' %}">
+                Mis inscripciones
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'mis_partidos' %}">
+                Mis partidos
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'resultados_usuario' %}">
+                Resultados
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'grupos_clasificaciones_usuario' %}">
+                Grupos y clasificaciones
+            </a>
+        </li>
+
+    </ul>
+
+    <div class="logout">
+        <a href="{% url 'logout' %}">
+            Cerrar sesión
+        </a>
+    </div>
+
+</aside>
+
+
+<!-- =========================
+     CONTENIDO PRINCIPAL
+========================== -->
+
+<main class="main">
+
+
+    <!-- =========================
+         TOPBAR
+    ========================== -->
+
+    <div class="topbar">
+
+
+        <h2>
+            Mis equipos
+        </h2>
+
+
+        <div class="user-info">
+
+            <strong>
+                {{ user.nombre }} {{ user.apellido }}
+            </strong>
+
+            <span>
+                {{ user.correo }}
+            </span>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =========================
+         ENCABEZADO
+    ========================== -->
+
+    <section class="page-header">
+
+
+        <h3>
+            Mis equipos
+        </h3>
+
+
+        <p>
+
+            Aquí puedes consultar los equipos
+            que has registrado, sus integrantes
+            y el estado de cada inscripción en
+            los torneos de ViveSport.
+
+        </p>
+
+
+    </section>
+
+
+    <!-- =========================
+         MENSAJES
+    ========================== -->
+
+    {% if messages %}
+
+        <div class="messages">
+
+            {% for message in messages %}
+
+                <div class="message {{ message.tags }}">
+
+                    {{ message }}
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- =========================
+         LISTA DE EQUIPOS
+    ========================== -->
+
+    {% if equipos %}
+
+
+        <section class="equipos">
+
+
+            {% for equipo in equipos %}
+
+
+                <article class="equipo-card">
+
+
+                    <!-- =========================
+                         NOMBRE DEL EQUIPO
+                    ========================== -->
+
+                    <h3>
+                        {{ equipo.nombre }}
+                    </h3>
+
+
+                    <!-- =========================
+                         INSCRIPCIONES
+                    ========================== -->
+
+                    {% if equipo.inscripciones.all %}
+
+
+                        {% for inscripcion in equipo.inscripciones.all %}
+
+
+                            <!-- =========================
+                                 TORNEO
+                            ========================== -->
+
+                            <div class="info-row">
+
+                                <span class="info-label">
+                                    Torneo
+                                </span>
+
+                                <span class="info-value">
+                                    {{ inscripcion.torneo.nombre }}
+                                </span>
+
+                            </div>
+
+
+                            <!-- =========================
+                                 DEPORTE
+                            ========================== -->
+
+                            <div class="info-row">
+
+                                <span class="info-label">
+                                    Deporte
+                                </span>
+
+                                <span class="info-value">
+                                    {{ inscripcion.torneo.get_deporte_display }}
+                                </span>
+
+                            </div>
+
+
+                            <!-- =========================
+                                 FECHA
+                            ========================== -->
+
+                            <div class="info-row">
+
+                                <span class="info-label">
+                                    Fecha de inicio
+                                </span>
+
+                                <span class="info-value">
+                                    {{ inscripcion.torneo.fecha_inicio }}
+                                </span>
+
+                            </div>
+
+
+                            <!-- =========================
+                                 ESTADO
+                            ========================== -->
+
+                            <div class="info-row">
+
+                                <span class="info-label">
+                                    Estado
+                                </span>
+
+
+                                <span class="info-value">
+
+
+                                    {% if inscripcion.estado == "pendiente" %}
+
+                                        <span class="status status-pending">
+                                            Pendiente
+                                        </span>
+
+
+                                    {% elif inscripcion.estado == "aceptada" %}
+
+                                        <span class="status status-approved">
+                                            Aceptado
+                                        </span>
+
+
+                                    {% elif inscripcion.estado == "rechazada" %}
+
+                                        <span class="status status-rejected">
+                                            Rechazado
+                                        </span>
+
+
+                                    {% else %}
+
+                                        <span class="status status-default">
+                                            {{ inscripcion.get_estado_display }}
+                                        </span>
+
+                                    {% endif %}
+
+
+                                </span>
+
+                            </div>
+
+
+                        {% endfor %}
+
+
+                    {% else %}
+
+
+                        <div class="no-registration">
+
+                            Este equipo todavía no tiene
+                            una inscripción asociada.
+
+                        </div>
+
+
+                    {% endif %}
+
+
+                    <!-- =========================
+                         INTEGRANTES
+                    ========================== -->
+
+                    <div class="members">
+
+
+                        <div class="members-title">
+
+                            Integrantes
+                            ({{ equipo.integrantes.count }})
+
+                        </div>
+
+
+                        {% if equipo.integrantes.all %}
+
+                            <ul class="members-list">
+
+
+                                {% for integrante in equipo.integrantes.all %}
+
+                                    <li>
+
+                                        {{ integrante.nombre }}
+                                        {{ integrante.apellido }}
+
+                                    </li>
+
+                                {% endfor %}
+
+
+                            </ul>
+
+                        {% else %}
+
+                            <div class="no-registration">
+
+                                Este equipo no tiene integrantes
+                                registrados.
+
+                            </div>
+
+                        {% endif %}
+
+
+                    </div>
+
+
+                    <div class="equipo-actions">
+
+    <a
+        href="{% url 'ver_equipo' equipo.id %}"
+        class="btn btn-primary"
+    >
+        Ver equipo
+    </a>
+
+</div>
+
+
+                </article>
+
+
+            {% endfor %}
+
+
+        </section>
+
+
+    {% else %}
+
+
+        <!-- =========================
+             SIN EQUIPOS
+        ========================== -->
+
+        <section class="empty-state">
+
+
+            <h3>
+                No tienes equipos
+            </h3>
+
+
+            <p>
+
+                Actualmente no tienes equipos
+                registrados en ViveSport.
+
+            </p>
+
+
+            <a
+                href="{% url 'torneos_disponibles' %}"
+                class="btn btn-primary"
+            >
+
+                Ver torneos disponibles
+
+            </a>
+
+
+        </section>
+
+
+    {% endif %}
+
+
+    <!-- =========================
+         VOLVER
+    ========================== -->
+
+    <a
+        href="{% url 'inicio' %}"
+        class="back-link"
+    >
+
+        ← Volver al panel
+
+    </a>
+
+
+</main>
+
+</div>
+
+</body>
+
+</html>

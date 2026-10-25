@@ -1,0 +1,1193 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+
+>
+
+<title>
+    ViveSport | Mis inscripciones
+</title>
+
+<style>
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #f4f6f8;
+        color: #1f2937;
+    }
+
+
+    .layout {
+        display: flex;
+        min-height: 100vh;
+    }
+
+
+    /* =========================
+       SIDEBAR
+    ========================== */
+
+    .sidebar {
+        width: 250px;
+        min-width: 250px;
+        background-color: #004F3F;
+        color: white;
+        padding: 25px 18px;
+        display: flex;
+        flex-direction: column;
+    }
+
+
+    .logo {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+
+    .logo img {
+        width: 150px;
+        height: auto;
+        display: block;
+        margin: 0 auto 12px;
+    }
+
+
+    .logo span {
+        display: block;
+        margin-top: 5px;
+        font-size: 12px;
+        opacity: 0.75;
+    }
+
+
+    .menu-title {
+        font-size: 11px;
+        text-transform: uppercase;
+        opacity: 0.65;
+        margin: 0 12px 12px;
+    }
+
+
+    .menu {
+        list-style: none;
+    }
+
+
+    .menu li {
+        margin-bottom: 6px;
+    }
+
+
+    .menu a {
+        display: block;
+        padding: 12px 14px;
+        border-radius: 8px;
+        color: white;
+        text-decoration: none;
+        font-size: 15px;
+        transition: 0.2s;
+    }
+
+
+    .menu a:hover,
+    .menu a.active {
+        background-color: #0a6755;
+    }
+
+
+    /* =========================
+       CERRAR SESIÓN
+    ========================== */
+
+    .logout {
+        margin-top: auto;
+    }
+
+
+    .logout a {
+        display: block;
+        padding: 12px 14px;
+        border-radius: 8px;
+        color: white;
+        text-decoration: none;
+        background-color: rgba(255, 255, 255, 0.08);
+        transition: 0.2s;
+    }
+
+
+    .logout a:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+    }
+
+
+    /* =========================
+       CONTENIDO
+    ========================== */
+
+    .main {
+        flex: 1;
+        padding: 30px;
+        min-width: 0;
+    }
+
+
+    /* =========================
+       TOPBAR
+    ========================== */
+
+    .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+
+    .topbar h2 {
+        font-size: 25px;
+        color: #1f2937;
+    }
+
+
+    .user-info {
+        text-align: right;
+    }
+
+
+    .user-info strong {
+        display: block;
+        font-size: 15px;
+        color: #1f2937;
+    }
+
+
+    .user-info span {
+        font-size: 13px;
+        color: #6b7280;
+    }
+
+
+    /* =========================
+       ENCABEZADO
+    ========================== */
+
+    .page-header {
+        background-color: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 25px;
+    }
+
+
+    .page-header h3 {
+        margin-bottom: 8px;
+        color: #1f2937;
+    }
+
+
+    .page-header p {
+        color: #6b7280;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+
+    /* =========================
+       MENSAJES
+    ========================== */
+
+    .messages {
+        margin-bottom: 25px;
+    }
+
+
+    .message {
+        padding: 14px 16px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        font-size: 14px;
+        line-height: 1.5;
+        border: 1px solid;
+    }
+
+
+    .message:last-child {
+        margin-bottom: 0;
+    }
+
+
+    .message.success {
+        background-color: #ecfdf5;
+        border-color: #a7f3d0;
+        color: #047857;
+    }
+
+
+    .message.error {
+        background-color: #fef2f2;
+        border-color: #fecaca;
+        color: #b91c1c;
+    }
+
+
+    .message.warning {
+        background-color: #fffbeb;
+        border-color: #fde68a;
+        color: #b45309;
+    }
+
+
+    .message.info {
+        background-color: #eff6ff;
+        border-color: #bfdbfe;
+        color: #1d4ed8;
+    }
+
+
+    /* =========================
+       INSCRIPCIONES
+    ========================== */
+
+    .inscripciones {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+
+    .inscripcion-card {
+        background-color: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 22px;
+        transition: 0.2s;
+    }
+
+
+    .inscripcion-card:hover {
+        border-color: #b8d8d1;
+        transform: translateY(-2px);
+    }
+
+
+    .inscripcion-card h3 {
+        color: #004F3F;
+        font-size: 19px;
+        margin-bottom: 18px;
+    }
+
+
+    /* =========================
+       INFORMACIÓN
+    ========================== */
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 14px;
+    }
+
+
+    .info-row:last-child {
+        border-bottom: none;
+    }
+
+
+    .info-label {
+        color: #6b7280;
+        font-weight: 600;
+    }
+
+
+    .info-value {
+        text-align: right;
+        color: #1f2937;
+        font-weight: 500;
+    }
+
+
+    /* =========================
+       ESTADOS
+    ========================== */
+
+    .status {
+        display: inline-block;
+        padding: 6px 11px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+        white-space: nowrap;
+    }
+
+
+    .status-pending {
+        background-color: #fffbeb;
+        color: #b45309;
+        border: 1px solid #fde68a;
+    }
+
+
+    .status-approved {
+        background-color: #ecfdf5;
+        color: #047857;
+        border: 1px solid #a7f3d0;
+    }
+
+
+    .status-rejected {
+        background-color: #fef2f2;
+        color: #b91c1c;
+        border: 1px solid #fecaca;
+    }
+
+
+    .status-default {
+        background-color: #eff6ff;
+        color: #1d4ed8;
+        border: 1px solid #bfdbfe;
+    }
+
+
+    /* =========================
+       ACCIONES
+    ========================== */
+
+    .card-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 20px;
+        padding-top: 18px;
+        border-top: 1px solid #f0f0f0;
+    }
+
+
+    .delete-form {
+        margin: 0;
+    }
+
+
+    .btn {
+        display: inline-block;
+        padding: 11px 16px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+        transition: 0.2s;
+        border: none;
+        cursor: pointer;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+
+    .btn-danger {
+        background-color: #b91c1c;
+        color: white;
+    }
+
+
+    .btn-danger:hover {
+        background-color: #991b1b;
+    }
+
+
+    .btn-primary {
+        background-color: #004F3F;
+        color: white;
+    }
+
+
+    .btn-primary:hover {
+        background-color: #0a6755;
+    }
+
+
+    /* =========================
+       INFORMACIÓN SIN ACCIÓN
+    ========================== */
+
+    .no-action {
+        margin-top: 18px;
+        padding: 12px 14px;
+        border-radius: 8px;
+        background-color: #f9fafb;
+        border: 1px solid #e5e7eb;
+        color: #6b7280;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+
+    .no-action.approved {
+        background-color: #ecfdf5;
+        border-color: #a7f3d0;
+        color: #047857;
+    }
+
+
+    .no-action.rejected {
+        background-color: #fef2f2;
+        border-color: #fecaca;
+        color: #b91c1c;
+    }
+
+
+    .no-action.locked {
+        background-color: #fffbeb;
+        border-color: #fde68a;
+        color: #b45309;
+    }
+
+
+    /* =========================
+       EDICIONES
+    ========================== */
+
+    .ediciones-info {
+        margin-top: 18px;
+        padding: 12px 14px;
+        border-radius: 8px;
+        background-color: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        color: #166534;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+
+    /* =========================
+       SIN INSCRIPCIONES
+    ========================== */
+
+    .empty-state {
+        background-color: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 50px 25px;
+        text-align: center;
+    }
+
+
+    .empty-state h3 {
+        margin-bottom: 10px;
+        color: #374151;
+    }
+
+
+    .empty-state p {
+        color: #6b7280;
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+
+
+    /* =========================
+       VOLVER
+    ========================== */
+
+    .back-link {
+        display: inline-block;
+        margin-top: 25px;
+        color: #004F3F;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+
+    .back-link:hover {
+        text-decoration: underline;
+    }
+
+
+    /* =========================
+       RESPONSIVE
+    ========================== */
+
+    @media (max-width: 1000px) {
+
+        .sidebar {
+            width: 220px;
+            min-width: 220px;
+        }
+
+
+        .inscripciones {
+            grid-template-columns: 1fr;
+        }
+
+    }
+
+
+    @media (max-width: 700px) {
+
+        .layout {
+            flex-direction: column;
+        }
+
+
+        .sidebar {
+            width: 100%;
+            min-width: 100%;
+        }
+
+
+        .logo {
+            margin-bottom: 25px;
+        }
+
+
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+        }
+
+
+        .menu li {
+            margin-bottom: 0;
+        }
+
+
+        .logout {
+            margin-top: 20px;
+        }
+
+
+        .topbar {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+
+        .user-info {
+            text-align: left;
+        }
+
+
+        .main {
+            padding: 20px;
+        }
+
+
+        .inscripciones {
+            grid-template-columns: 1fr;
+        }
+
+
+        .info-row {
+            align-items: flex-start;
+        }
+
+
+        .info-value {
+            text-align: right;
+        }
+
+    }
+
+
+    @media (max-width: 500px) {
+
+        .menu {
+            grid-template-columns: 1fr;
+        }
+
+
+        .page-header {
+            padding: 20px;
+        }
+
+
+        .inscripcion-card {
+            padding: 18px;
+        }
+
+
+        .info-row {
+            flex-direction: column;
+            gap: 5px;
+        }
+
+
+        .info-value {
+            text-align: left;
+        }
+
+
+        .card-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+
+        .card-actions .btn {
+            width: 100%;
+            text-align: center;
+        }
+
+
+        .status {
+            white-space: normal;
+        }
+
+    }
+
+</style>
+
+</head>
+
+<body>
+
+<div class="layout">
+
+<!-- =========================
+     SIDEBAR
+========================== -->
+
+<aside class="sidebar">
+
+
+<div class="logo">
+
+    <img
+        src="{% static 'usuarios/img/logo.png' %}"
+        alt="Logo ViveSport"
+    >
+
+    <span>
+        Panel de usuario
+    </span>
+
+</div>
+
+
+<div class="menu-title">
+    Mi ViveSport
+</div>
+
+<ul class="menu">
+
+    <li>
+        <a href="{% url 'inicio' %}">
+            Inicio
+        </a>
+    </li>
+
+    <li>
+        <a href="{% url 'torneos_disponibles' %}">
+            Torneos
+        </a>
+    </li>
+
+    <li>
+        <a href="{% url 'mis_equipos' %}">
+            Mis equipos
+        </a>
+    </li>
+
+    <li>
+        <a
+            href="{% url 'mis_inscripciones' %}"
+            class="active"
+            aria-current="page"
+        >
+            Mis inscripciones
+        </a>
+    </li>
+
+    <li>
+        <a href="{% url 'mis_partidos' %}">
+            Mis partidos
+        </a>
+    </li>
+
+    <li>
+        <a href="{% url 'resultados_usuario' %}">
+            Resultados
+        </a>
+    </li>
+
+    <li>
+        <a href="{% url 'grupos_clasificaciones_usuario' %}">
+            Grupos y clasificaciones
+        </a>
+    </li>
+
+</ul>
+
+<div class="logout">
+    <a href="{% url 'logout' %}">
+        Cerrar sesión
+    </a>
+</div>
+
+
+</aside>
+
+<!-- =========================
+     CONTENIDO PRINCIPAL
+========================== -->
+
+<main class="main">
+
+
+<!-- =========================
+     TOPBAR
+========================== -->
+
+<div class="topbar">
+
+
+    <h2>
+        Mis inscripciones
+    </h2>
+
+
+    <div class="user-info">
+
+        <strong>
+            {{ user.nombre }} {{ user.apellido }}
+        </strong>
+
+        <span>
+            {{ user.correo }}
+        </span>
+
+    </div>
+
+
+</div>
+
+
+<!-- =========================
+     ENCABEZADO
+========================== -->
+
+<section class="page-header">
+
+
+    <h3>
+        Mis inscripciones
+    </h3>
+
+
+    <p>
+
+        Aquí puedes consultar los equipos que
+        has registrado y el estado actual de
+        cada inscripción en los torneos de
+        ViveSport.
+
+    </p>
+
+</section>
+
+
+<!-- =========================
+     MENSAJES
+========================== -->
+
+{% if messages %}
+
+    <div class="messages">
+
+        {% for message in messages %}
+
+            <div class="message {{ message.tags }}">
+
+                {{ message }}
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% endif %}
+
+
+<!-- =========================
+     LISTA DE INSCRIPCIONES
+========================== -->
+
+{% if inscripciones %}
+
+
+    <section class="inscripciones">
+
+
+        {% for inscripcion in inscripciones %}
+
+
+            <article class="inscripcion-card">
+
+
+                <!-- =========================
+                     TORNEO
+                ========================== -->
+
+                <h3>
+                    {{ inscripcion.torneo.nombre }}
+                </h3>
+
+
+                <!-- =========================
+                     DEPORTE
+                ========================== -->
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Deporte
+                    </span>
+
+                    <span class="info-value">
+                        {{ inscripcion.torneo.get_deporte_display }}
+                    </span>
+
+                </div>
+
+
+                <!-- =========================
+                     EQUIPO
+                ========================== -->
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Equipo
+                    </span>
+
+                    <span class="info-value">
+                        {{ inscripcion.equipo.nombre }}
+                    </span>
+
+                </div>
+
+
+                <!-- =========================
+                     FECHA DE INICIO
+                ========================== -->
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Fecha de inicio
+                    </span>
+
+                    <span class="info-value">
+                        {{ inscripcion.torneo.fecha_inicio }}
+                    </span>
+
+                </div>
+
+
+                <!-- =========================
+                     INTEGRANTES
+                ========================== -->
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Integrantes
+                    </span>
+
+                    <span class="info-value">
+                        {{ inscripcion.equipo.integrantes.count }}
+                    </span>
+
+                </div>
+
+
+                <!-- =========================
+                     EDICIONES
+                ========================== -->
+
+                {% if inscripcion.estado == "pendiente" %}
+
+                    <div class="info-row">
+
+                        <span class="info-label">
+                            Ediciones utilizadas
+                        </span>
+
+                        <span class="info-value">
+                            {{ inscripcion.ediciones_realizadas }} de 3
+                        </span>
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- =========================
+                     ESTADO
+                ========================== -->
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Estado
+                    </span>
+
+
+                    <span class="info-value">
+
+
+                        {% if inscripcion.estado == "pendiente" %}
+
+                            <span class="status status-pending">
+                                Pendiente de revisión
+                            </span>
+
+
+                        {% elif inscripcion.estado == "aceptada" %}
+
+                            <span class="status status-approved">
+                                Inscripción aceptada
+                            </span>
+
+
+                        {% elif inscripcion.estado == "rechazada" %}
+
+                            <span class="status status-rejected">
+                                Inscripción rechazada
+                            </span>
+
+
+                        {% else %}
+
+                            <span class="status status-default">
+                                {{ inscripcion.get_estado_display }}
+                            </span>
+
+                        {% endif %}
+
+
+                    </span>
+
+                </div>
+
+
+                <!-- =========================
+                     ACCIONES SEGÚN ESTADO
+                ========================== -->
+
+                {% if inscripcion.estado == "pendiente" %}
+
+
+                    {% if inscripcion.puede_editar %}
+
+                        <div class="card-actions">
+
+                            <!-- =========================
+                                 EDITAR
+                            ========================== -->
+
+                            <a
+                                href="{% url 'editar_inscripcion' inscripcion.id %}"
+                                class="btn btn-primary"
+                            >
+                                Editar inscripción
+                            </a>
+
+
+                            <!-- =========================
+                                 ELIMINAR
+                            ========================== -->
+
+                            <form
+                                method="POST"
+                                action="{% url 'eliminar_inscripcion' inscripcion.id %}"
+                                class="delete-form"
+                                onsubmit="return confirmarEliminacion();"
+                            >
+
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-danger"
+                                >
+                                    Eliminar inscripción
+                                </button>
+
+                            </form>
+
+                        </div>
+
+
+                    {% else %}
+
+
+                        <!-- =========================
+                             INSCRIPCIÓN DEFINIDA
+                        ========================== -->
+
+                        {% if inscripcion.ediciones_realizadas >= 3 %}
+
+                            <div class="no-action locked">
+
+                                Has utilizado las 3 ediciones permitidas.
+                                La inscripción quedó definida y sus datos
+                                son permanentes. Ya no puede ser editada
+                                ni eliminada.
+
+                            </div>
+
+
+                        {% elif inscripcion.edicion_bloqueada %}
+
+                            <div class="no-action locked">
+
+                                El período de edición ha finalizado.
+                                La inscripción quedó definida y sus datos
+                                son permanentes. Ya no puede ser editada
+                                ni eliminada.
+
+                            </div>
+
+                        {% endif %}
+
+
+                    {% endif %}
+
+
+                {% elif inscripcion.estado == "aceptada" %}
+
+
+                    <div class="no-action approved">
+
+                        Esta inscripción ya fue aceptada por
+                        el administrador y no puede ser
+                        editada ni eliminada.
+
+                    </div>
+
+
+                {% elif inscripcion.estado == "rechazada" %}
+
+
+                    <div class="no-action rejected">
+
+                        Esta inscripción fue rechazada y
+                        se conserva como historial.
+                        No puede ser editada ni eliminada.
+
+                    </div>
+
+
+                {% endif %}
+
+
+            </article>
+
+
+        {% endfor %}
+
+
+    </section>
+
+
+{% else %}
+
+
+    <!-- =========================
+         SIN INSCRIPCIONES
+    ========================== -->
+
+    <section class="empty-state">
+
+
+        <h3>
+            No tienes inscripciones
+        </h3>
+
+
+        <p>
+
+            Actualmente no tienes equipos
+            inscritos en ningún torneo.
+
+        </p>
+
+
+        <a
+            href="{% url 'torneos_disponibles' %}"
+            class="btn btn-primary"
+        >
+
+            Ver torneos disponibles
+
+        </a>
+
+
+    </section>
+
+
+{% endif %}
+
+
+<!-- =========================
+     VOLVER
+========================== -->
+
+<a
+    href="{% url 'inicio' %}"
+    class="back-link"
+>
+
+    ← Volver al panel
+
+</a>
+
+
+</main>
+
+</div>
+
+<!-- =========================
+     CONFIRMACIÓN ELIMINACIÓN
+========================== -->
+
+<script>
+
+    function confirmarEliminacion() {
+
+        return confirm(
+            "¿Estás seguro de que deseas eliminar esta inscripción? Esta acción no se puede deshacer."
+        );
+
+    }
+
+</script>
+
+</body>
+
+</html>

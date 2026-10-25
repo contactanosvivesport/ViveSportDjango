@@ -1,0 +1,623 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ViveSport | Mis partidos</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f6f8;
+            color: #1f2937;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 250px;
+            min-width: 250px;
+            background-color: #004F3F;
+            color: white;
+            padding: 25px 18px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo img {
+            width: 150px;
+            height: auto;
+            display: block;
+            margin: 0 auto 12px;
+        }
+
+        .logo span {
+            display: block;
+            margin-top: 5px;
+            font-size: 12px;
+            opacity: 0.75;
+        }
+
+        .menu-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            opacity: 0.65;
+            margin: 0 12px 12px;
+        }
+
+        .menu {
+            list-style: none;
+        }
+
+        .menu li {
+            margin-bottom: 6px;
+        }
+
+        .menu a {
+            display: block;
+            padding: 12px 14px;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            transition: background-color 0.2s;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background-color: #0a6755;
+        }
+
+        .logout {
+            margin-top: auto;
+            padding-top: 25px;
+        }
+
+        .logout a {
+            display: block;
+            padding: 12px 14px;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            background-color: rgba(255, 255, 255, 0.08);
+            transition: background-color 0.2s;
+        }
+
+        .logout a:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* CONTENIDO PRINCIPAL */
+
+        .main {
+            flex: 1;
+            min-width: 0;
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .topbar h1 {
+            font-size: 25px;
+            color: #1f2937;
+        }
+
+        .user-info {
+            text-align: right;
+            overflow-wrap: anywhere;
+        }
+
+        .user-info strong {
+            display: block;
+            font-size: 15px;
+            color: #1f2937;
+        }
+
+        .user-info span {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        /* ENCABEZADO */
+
+        .page-header {
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .page-header h2 {
+            margin-bottom: 8px;
+            color: #004F3F;
+            font-size: 21px;
+        }
+
+        .page-header p {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* TABLA DE PARTIDOS */
+
+        .tabla-contenedor {
+            overflow-x: auto;
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+        }
+
+        .tabla-encabezado {
+            padding: 20px 22px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .tabla-encabezado h3 {
+            color: #1f2937;
+            font-size: 17px;
+            margin-bottom: 5px;
+        }
+
+        .tabla-encabezado p {
+            color: #6b7280;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th,
+        td {
+            padding: 15px 16px;
+            text-align: left;
+            border-bottom: 1px solid #edf0f2;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #e8f1ee;
+            color: #004F3F;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background-color: #f9fbfa;
+        }
+
+        .partido {
+            min-width: 190px;
+            font-weight: 600;
+            color: #1f2937;
+            line-height: 1.5;
+        }
+
+        .versus {
+            color: #6b7280;
+            font-size: 12px;
+            font-weight: normal;
+            padding: 0 4px;
+        }
+
+        .fecha,
+        .hora {
+            white-space: nowrap;
+        }
+
+        /* ESTADOS */
+
+        .estado {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            background-color: #f3f4f6;
+            color: #4b5563;
+            border: 1px solid #e5e7eb;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .estado-programado {
+            background-color: #eff6ff;
+            color: #1d4ed8;
+            border-color: #bfdbfe;
+        }
+
+        .estado-jugado {
+            background-color: #ecfdf5;
+            color: #047857;
+            border-color: #a7f3d0;
+        }
+
+        .estado-cancelado {
+            background-color: #fef2f2;
+            color: #b91c1c;
+            border-color: #fecaca;
+        }
+
+        /* SIN PARTIDOS */
+
+        .vacio {
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 45px 25px;
+            text-align: center;
+        }
+
+        .vacio h3 {
+            color: #374151;
+            margin-bottom: 10px;
+            font-size: 19px;
+        }
+
+        .vacio p {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 520px;
+            margin: 0 auto 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 11px 16px;
+            background-color: #004F3F;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #0a6755;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 25px;
+            color: #004F3F;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 1000px) {
+            .sidebar {
+                width: 220px;
+                min-width: 220px;
+            }
+
+            .main {
+                padding: 24px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .layout {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                min-width: 100%;
+            }
+
+            .logo {
+                margin-bottom: 25px;
+            }
+
+            .menu {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 6px;
+            }
+
+            .menu li {
+                margin-bottom: 0;
+            }
+
+            .logout {
+                margin-top: 20px;
+                padding-top: 0;
+            }
+
+            .main {
+                padding: 20px;
+            }
+
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .user-info {
+                text-align: left;
+            }
+
+            .page-header {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .menu {
+                grid-template-columns: 1fr;
+            }
+
+            .main {
+                padding: 16px;
+            }
+
+            .page-header {
+                padding: 18px;
+            }
+
+            .tabla-encabezado {
+                padding: 18px;
+            }
+
+            .vacio {
+                padding: 35px 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="layout">
+
+    <!-- MENÚ LATERAL -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <img
+                src="{% static 'usuarios/img/logo.png' %}"
+                alt="Logo ViveSport"
+            >
+
+            <span>Panel de usuario</span>
+        </div>
+
+        <div class="menu-title">
+            Mi ViveSport
+        </div>
+
+        <ul class="menu">
+
+            <li>
+                <a href="{% url 'inicio' %}">
+                    Inicio
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'torneos_disponibles' %}">
+                    Torneos
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'mis_equipos' %}">
+                    Mis equipos
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'mis_inscripciones' %}">
+                    Mis inscripciones
+                </a>
+            </li>
+
+            <li>
+                <a
+                    href="{% url 'mis_partidos' %}"
+                    class="active"
+                    aria-current="page"
+                >
+                    Mis partidos
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'resultados_usuario' %}">
+                    Resultados
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'grupos_clasificaciones_usuario' %}">
+                    Grupos y clasificaciones
+                </a>
+            </li>
+
+        </ul>
+
+        <div class="logout">
+            <a href="{% url 'logout' %}">
+                Cerrar sesión
+            </a>
+        </div>
+
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+
+    <main class="main">
+
+        <header class="topbar">
+            <h1>Mis partidos</h1>
+
+            <div class="user-info">
+                <strong>{{ user.nombre }} {{ user.apellido }}</strong>
+                <span>{{ user.correo }}</span>
+            </div>
+        </header>
+
+        <section class="page-header">
+            <h2>Partidos de mis equipos</h2>
+
+            <p>
+                Consulta los encuentros de tus equipos con inscripción
+                aceptada, sus fechas, horarios, grupos y estados actuales.
+            </p>
+        </section>
+
+        {% if partidos %}
+
+            <section class="tabla-contenedor">
+
+                <div class="tabla-encabezado">
+                    <h3>Listado de partidos</h3>
+                    <p>
+                        Aquí aparecen los encuentros asociados a tus equipos.
+                        Si una fecha u hora aún no está definida, se indicará.
+                    </p>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Torneo</th>
+                            <th>Partido</th>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Grupo o fase</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for partido in partidos %}
+                            <tr>
+                                <td>
+                                    {{ partido.torneo.nombre }}
+                                </td>
+
+                                <td class="partido">
+                                    {{ partido.equipo_local.nombre }}
+                                    <span class="versus">vs.</span>
+                                    {{ partido.equipo_visitante.nombre }}
+                                </td>
+
+                                <td class="fecha">
+                                    {{ partido.fecha|date:"d/m/Y"|default:"Por definir" }}
+                                </td>
+
+                                <td class="hora">
+                                    {{ partido.hora|time:"H:i"|default:"Por definir" }}
+                                </td>
+
+                                <td>
+                                    {% if partido.grupo %}
+                                        Grupo {{ partido.grupo.numero }}
+                                    {% elif partido.fase %}
+                                        {{ partido.fase.get_tipo_display|default:partido.fase.tipo }}
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {% if partido.estado == "programado" %}
+                                        <span class="estado estado-programado">
+                                            {{ partido.get_estado_display|default:partido.estado }}
+                                        </span>
+                                    {% elif partido.estado == "jugado" %}
+                                        <span class="estado estado-jugado">
+                                            {{ partido.get_estado_display|default:partido.estado }}
+                                        </span>
+                                    {% elif partido.estado == "cancelado" %}
+                                        <span class="estado estado-cancelado">
+                                            {{ partido.get_estado_display|default:partido.estado }}
+                                        </span>
+                                    {% else %}
+                                        <span class="estado">
+                                            {{ partido.get_estado_display|default:partido.estado }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </section>
+
+        {% else %}
+
+            <section class="vacio">
+                <h3>Aún no tienes partidos disponibles</h3>
+
+                <p>
+                    Cuando uno de tus equipos tenga una inscripción aceptada
+                    y se hayan generado sus partidos, aparecerán aquí.
+                </p>
+
+                <a
+                    href="{% url 'torneos_disponibles' %}"
+                    class="btn"
+                >
+                    Ver torneos disponibles
+                </a>
+            </section>
+
+        {% endif %}
+
+        <a href="{% url 'inicio' %}" class="back-link">
+            ← Volver al panel
+        </a>
+
+    </main>
+
+</div>
+</body>
+</html>

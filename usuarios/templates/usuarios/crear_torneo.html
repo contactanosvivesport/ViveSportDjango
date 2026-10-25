@@ -1,0 +1,633 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>ViveSport | Crear Torneo</title>
+
+<style>
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #f4f6f8;
+        color: #1f2937;
+    }
+
+    .layout {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    /* =========================
+       SIDEBAR
+    ========================= */
+
+    .sidebar {
+        width: 250px;
+        background-color: #004F3F;
+        color: white;
+        padding: 25px 18px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .logo {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .logo img {
+        width: 150px;
+        height: auto;
+        display: block;
+        margin: 0 auto 12px;
+    }
+
+    .logo span {
+        display: block;
+        margin-top: 5px;
+        font-size: 12px;
+        opacity: 0.75;
+    }
+
+    .menu-title {
+        font-size: 11px;
+        text-transform: uppercase;
+        opacity: 0.65;
+        margin: 0 12px 12px;
+    }
+
+    .menu {
+        list-style: none;
+    }
+
+    .menu li {
+        margin-bottom: 6px;
+    }
+
+    .menu a {
+        display: block;
+        padding: 12px 14px;
+        border-radius: 8px;
+        color: white;
+        text-decoration: none;
+        font-size: 15px;
+        transition: 0.2s;
+    }
+
+    .menu a:hover,
+    .menu a.active {
+        background-color: #0a6755;
+    }
+
+    .logout {
+        margin-top: auto;
+    }
+
+    .logout a {
+        display: block;
+        padding: 12px 14px;
+        border-radius: 8px;
+        color: white;
+        text-decoration: none;
+        background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .logout a:hover {
+        background-color: rgba(255, 255, 255, 0.15);
+    }
+
+    /* =========================
+       CONTENIDO
+    ========================= */
+
+    .main {
+        flex: 1;
+        padding: 30px;
+    }
+
+    .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .topbar h2 {
+        font-size: 25px;
+    }
+
+    .admin-info {
+        text-align: right;
+    }
+
+    .admin-info strong {
+        display: block;
+        font-size: 15px;
+    }
+
+    .admin-info span {
+        font-size: 13px;
+        color: #6b7280;
+    }
+
+    /* =========================
+       FORMULARIO
+    ========================= */
+
+    .form-container {
+        max-width: 800px;
+        background-color: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 30px;
+    }
+
+    .form-header {
+        margin-bottom: 25px;
+    }
+
+    .form-header h3 {
+        margin-bottom: 8px;
+    }
+
+    .form-header p {
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 7px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 11px 13px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 14px;
+        outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        border-color: #004F3F;
+    }
+
+    .form-group textarea {
+        resize: vertical;
+        min-height: 130px;
+    }
+
+    .help-text {
+        display: block;
+        margin-top: 6px;
+        color: #6b7280;
+        font-size: 12px;
+    }
+
+    .error {
+        margin-top: 6px;
+        color: #b91c1c;
+        font-size: 13px;
+    }
+
+    /* =========================
+       BOTONES
+    ========================= */
+
+    .actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 25px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 11px 18px;
+        border-radius: 8px;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .btn-primary {
+        background-color: #004F3F;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #0a6755;
+    }
+
+    .btn-secondary {
+        background-color: #eef2f7;
+        color: #374151;
+    }
+
+    .btn-secondary:hover {
+        background-color: #e5e7eb;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 650px) {
+
+        .layout {
+            flex-direction: column;
+        }
+
+        .sidebar {
+            width: 100%;
+        }
+
+        .logout {
+            margin-top: 20px;
+        }
+
+        .main {
+            padding: 20px;
+        }
+
+        .topbar {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .admin-info {
+            text-align: left;
+        }
+
+        .form-container {
+            padding: 20px;
+        }
+
+        .actions {
+            flex-direction: column;
+        }
+
+        .btn {
+            text-align: center;
+        }
+
+    }
+
+</style>
+
+</head>
+
+<body>
+
+<div class="layout">
+
+<!-- =========================
+     SIDEBAR
+========================== -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <img
+            src="{% static 'usuarios/img/logo.png' %}"
+            alt="Logo ViveSport"
+        >
+
+        <span>
+            Panel administrativo
+        </span>
+
+    </div>
+
+    <div class="menu-title">
+        Administración
+    </div>
+
+    <ul class="menu">
+
+        <li>
+            <a href="{% url 'admin_dashboard' %}" >
+                Inicio
+            </a>
+        </li>
+    
+        <li>
+            <a href="{% url 'usuarios_admin' %}">
+                Usuarios
+            </a>
+        </li>
+    
+        <li>
+    <a href="{% url 'equipos_admin' %}">
+        Equipos
+    </a>
+</li>
+    
+        <li>
+            <a href="{% url 'torneos_admin' %}" class="active">
+                Torneos
+            </a>
+        </li>
+    
+        <li>
+            <a href="{% url 'inscripciones_admin' %}">
+Inscripciones
+            </a>
+        </li>
+    
+        <li>
+            <a href="{% url 'inscripciones_equipos_admin' %}">
+                Equipos inscritos
+            </a>
+        </li>
+        <li>
+    <a href="{% url 'configuraciones_competicion' %}">
+        Competición
+    </a>
+</li>
+    
+        <li>
+    <a href="{% url 'partidos_torneos_admin' %}">
+        Partidos
+    </a>
+</li>
+<li>
+    <a href="{% url 'grupos_admin' %}">
+        Grupos
+    </a>
+</li>
+    
+        <li>
+            <a href="{% url 'resultados_admin' %}">
+                Resultados
+            </a>
+        </li>
+    
+    </ul>
+
+    <div class="logout">
+
+        <a href="{% url 'logout' %}">
+            Cerrar sesión
+        </a>
+
+    </div>
+
+</aside>
+
+
+<!-- =========================
+     CONTENIDO
+========================== -->
+
+<main class="main">
+
+    <div class="topbar">
+
+        <h2>
+            Torneos
+        </h2>
+
+        <div class="admin-info">
+
+            <strong>
+                {{ user.nombre }} {{ user.apellido }}
+            </strong>
+
+            <span>
+                {{ user.correo }}
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         FORMULARIO
+    ========================== -->
+
+    <section class="form-container">
+
+        <div class="form-header">
+
+            <h3>
+                Crear nuevo torneo
+            </h3>
+
+            <p>
+                Completa la información para registrar
+                un nuevo torneo en ViveSport.
+            </p>
+
+        </div>
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <!-- =========================
+                 NOMBRE
+            ========================== -->
+
+            <div class="form-group">
+
+                <label for="{{ form.nombre.id_for_label }}">
+                    Nombre del torneo
+                </label>
+
+                {{ form.nombre }}
+
+                {% if form.nombre.errors %}
+
+                    {% for error in form.nombre.errors %}
+
+                        <div class="error">
+                            {{ error }}
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+
+            </div>
+            <!-- =========================
+     DEPORTE
+========================== -->
+
+<div class="form-group">
+
+    <label for="{{ form.deporte.id_for_label }}">
+        Deporte
+    </label>
+
+    {{ form.deporte }}
+
+    {% if form.deporte.errors %}
+
+        {% for error in form.deporte.errors %}
+
+            <div class="error">
+                {{ error }}
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+</div>
+
+        <!-- =========================
+             DURACIÓN DEL PARTIDO
+        ========================== -->
+
+        <div class="form-group">
+
+            <label for="{{ form.duracion_partido.id_for_label }}">
+                Duración del partido (minutos)
+            </label>
+
+            {{ form.duracion_partido }}
+
+            <span class="help-text">
+                Ingresa la duración del partido en minutos.
+            </span>
+
+            {% if form.duracion_partido.errors %}
+
+                {% for error in form.duracion_partido.errors %}
+
+                    <div class="error">
+                        {{ error }}
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        </div>
+            <!-- =========================
+                 DESCRIPCIÓN
+            ========================== -->
+
+            <div class="form-group">
+
+                <label for="{{ form.descripcion.id_for_label }}">
+                    Descripción
+                </label>
+
+                {{ form.descripcion }}
+
+                {% if form.descripcion.errors %}
+
+                    {% for error in form.descripcion.errors %}
+
+                        <div class="error">
+                            {{ error }}
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- =========================
+                 FECHA DE INICIO
+            ========================== -->
+
+            <div class="form-group">
+
+                <label for="{{ form.fecha_inicio.id_for_label }}">
+                    Fecha de inicio
+                </label>
+
+                {{ form.fecha_inicio }}
+
+                <span class="help-text">
+                    La fecha debe ser igual o posterior a hoy.
+                </span>
+
+                {% if form.fecha_inicio.errors %}
+
+                    {% for error in form.fecha_inicio.errors %}
+
+                        <div class="error">
+                            {{ error }}
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- =========================
+                 BOTONES
+            ========================== -->
+
+            <div class="actions">
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Crear torneo
+                </button>
+
+                <a
+                    href="{% url 'torneos_admin' %}"
+                    class="btn btn-secondary"
+                >
+                    Cancelar
+                </a>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</main>
+
+</div>
+
+</body>
+
+</html>

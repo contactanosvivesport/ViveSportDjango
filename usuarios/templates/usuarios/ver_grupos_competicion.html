@@ -1,0 +1,725 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        ViveSport | Resultado del sorteo
+    </title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f6f8;
+            color: #1f2937;
+        }
+
+
+        /* =====================================================
+           LAYOUT
+        ===================================================== */
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        .sidebar {
+            width: 250px;
+            background-color: #004F3F;
+            color: white;
+            padding: 25px 18px;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+
+        .logo {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+
+        .logo img {
+            width: 150px;
+            height: auto;
+            display: block;
+            margin: 0 auto 12px;
+        }
+
+
+        .logo span {
+            display: block;
+            margin-top: 5px;
+            font-size: 12px;
+            opacity: 0.75;
+        }
+
+
+        .menu-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            opacity: 0.65;
+            margin: 0 12px 12px;
+        }
+
+
+        .menu {
+            list-style: none;
+        }
+
+
+        .menu li {
+            margin-bottom: 6px;
+        }
+
+
+        .menu a {
+            display: block;
+            padding: 12px 14px;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+
+        .menu a:hover,
+        .menu a.active {
+            background-color: #0a6755;
+        }
+
+
+        .logout {
+            margin-top: auto;
+        }
+
+
+        .logout a {
+            display: block;
+            padding: 12px 14px;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+
+        .logout a:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+
+        /* =====================================================
+           CONTENIDO
+        ===================================================== */
+
+        .main {
+            flex: 1;
+            padding: 30px;
+        }
+
+
+        /* =====================================================
+           TOPBAR
+        ===================================================== */
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+
+        .topbar h2 {
+            font-size: 25px;
+        }
+
+
+        .admin-info {
+            text-align: right;
+        }
+
+
+        .admin-info strong {
+            display: block;
+            font-size: 15px;
+        }
+
+
+        .admin-info span {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+
+        /* =====================================================
+           ENCABEZADO
+        ===================================================== */
+
+        .page-header {
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+
+        .page-header h3 {
+            color: #004F3F;
+            margin-bottom: 8px;
+            font-size: 21px;
+        }
+
+
+        .page-header p {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+
+        .torneo {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #374151;
+        }
+
+
+        .torneo strong {
+            color: #004F3F;
+        }
+
+
+        /* =====================================================
+           GRUPOS
+        ===================================================== */
+
+        .grupos {
+            display: grid;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(280px, 1fr)
+            );
+            gap: 20px;
+        }
+
+
+        .grupo {
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+
+        .grupo-header {
+            background-color: #004F3F;
+            color: white;
+            padding: 17px 20px;
+        }
+
+
+        .grupo-header h4 {
+            font-size: 18px;
+        }
+
+
+        .grupo-contenido {
+            padding: 18px;
+        }
+
+
+        /* =====================================================
+           EQUIPOS
+        ===================================================== */
+
+        .equipo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 10px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+
+        .equipo:last-child {
+            border-bottom: none;
+        }
+
+
+        .numero {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #f4f6f8;
+            color: #004F3F;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+
+        .equipo-nombre {
+            font-size: 14px;
+            font-weight: bold;
+            color: #374151;
+        }
+
+
+        .sin-equipos {
+            color: #6b7280;
+            font-size: 14px;
+            text-align: center;
+            padding: 10px;
+        }
+
+
+        /* =====================================================
+           BOTONES
+        ===================================================== */
+
+        .acciones {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+
+        .boton {
+            display: inline-block;
+            padding: 12px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+
+        .boton-secundario {
+            background-color: #e5e7eb;
+            color: #374151;
+        }
+
+
+        .boton-secundario:hover {
+            background-color: #d1d5db;
+        }
+        .boton-generar {
+        background-color: #004F3F;
+        color: white;
+        }
+
+        .boton-generar:hover {
+            background-color: #0a6755;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                width: 210px;
+            }
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            .layout {
+                flex-direction: column;
+            }
+
+
+            .sidebar {
+                width: 100%;
+            }
+
+
+            .logout {
+                margin-top: 20px;
+            }
+
+
+            .main {
+                padding: 20px;
+            }
+
+
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+
+            .admin-info {
+                text-align: left;
+            }
+
+
+            .grupos {
+                grid-template-columns: 1fr;
+            }
+
+
+            .acciones {
+                flex-direction: column;
+            }
+
+
+            .boton {
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="layout">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+    <div class="logo">
+
+        <img
+            src="{% static 'usuarios/img/logo.png' %}"
+            alt="Logo ViveSport"
+        >
+
+        <span>
+            Panel administrativo
+        </span>
+
+    </div>
+
+
+    <div class="menu-title">
+        Administración
+    </div>
+
+
+    <ul class="menu">
+
+        <li>
+            <a href="{% url 'admin_dashboard' %}">
+                Inicio
+            </a>
+        </li>
+
+
+        <li>
+            <a href="{% url 'usuarios_admin' %}">
+                Usuarios
+            </a>
+        </li>
+
+
+        <li>
+            <a href="{% url 'equipos_admin' %}">
+                Equipos
+            </a>
+        </li>
+
+
+        <li>
+            <a href="{% url 'torneos_admin' %}">
+                Torneos
+            </a>
+        </li>
+
+
+        <li>
+            <a href="{% url 'inscripciones_admin' %}">
+                Inscripciones
+            </a>
+        </li>
+
+
+        <li>
+            <a href="{% url 'inscripciones_equipos_admin' %}">
+                Equipos inscritos
+            </a>
+        </li>
+
+
+        <li>
+            <a
+                href="{% url 'configuraciones_competicion' %}"
+                class="active"
+            >
+                Competición
+            </a>
+        </li>
+
+
+        <li>
+    <a href="{% url 'partidos_torneos_admin' %}">
+        Partidos
+    </a>
+</li>
+<li>
+    <a href="{% url 'grupos_admin' %}">
+        Grupos
+    </a>
+</li>
+
+
+        <li>
+            <a href="{% url 'resultados_admin' %}">
+                Resultados
+            </a>
+        </li>
+
+    </ul>
+
+
+    <div class="logout">
+
+        <a href="{% url 'logout' %}">
+            Cerrar sesión
+        </a>
+
+    </div>
+
+</aside>
+
+
+    <!-- =====================================================
+         CONTENIDO
+    ====================================================== -->
+
+    <main class="main">
+
+
+        <!-- =================================================
+             TOPBAR
+        ================================================== -->
+
+        <div class="topbar">
+
+            <h2>
+                Resultado del sorteo
+            </h2>
+
+
+            <div class="admin-info">
+
+                <strong>
+                    {{ user.nombre }} {{ user.apellido }}
+                </strong>
+
+                <span>
+                    {{ user.correo }}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             ENCABEZADO
+        ================================================== -->
+
+        <section class="page-header">
+
+            <h3>
+                Distribución de equipos
+            </h3>
+
+
+            <p>
+                Estos son los grupos generados mediante el sorteo
+                de la fase de grupos.
+            </p>
+
+
+            <div class="torneo">
+
+                <strong>
+                    Torneo:
+                </strong>
+
+                {{ torneo.nombre }}
+
+                &nbsp;—&nbsp;
+
+                {{ torneo.get_deporte_display }}
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             GRUPOS
+        ================================================== -->
+
+        <section class="grupos">
+
+            {% for grupo in grupos %}
+
+                <div class="grupo">
+
+
+                    <div class="grupo-header">
+
+                        <h4>
+                            {{ grupo.nombre }}
+                        </h4>
+
+                    </div>
+
+
+                    <div class="grupo-contenido">
+
+
+                        {% for equipo_grupo in grupo.equipos_grupo.all %}
+
+                            <div class="equipo">
+
+                                <div class="numero">
+
+                                    {{ forloop.counter }}
+
+                                </div>
+
+
+                                <div class="equipo-nombre">
+
+                                    {{ equipo_grupo.equipo.nombre }}
+
+                                </div>
+
+                            </div>
+
+                        {% empty %}
+
+                            <div class="sin-equipos">
+
+                                No hay equipos asignados.
+
+                            </div>
+
+                        {% endfor %}
+
+
+                    </div>
+
+                </div>
+
+            {% empty %}
+
+                <div class="grupo">
+
+                    <div class="grupo-contenido">
+
+                        <div class="sin-equipos">
+
+                            No existen grupos para este torneo.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </section>
+
+
+        <!-- =================================================
+             ACCIONES
+        ================================================== -->
+
+        <div class="acciones">
+
+    <a
+        href="{% url 'ver_configuracion_competicion' configuracion.id %}"
+        class="boton boton-secundario"
+    >
+        Volver a configuración
+    </a>
+
+    {% if not configuracion.competicion_generada %}
+
+        <a
+            href="{% url 'generar_partidos' configuracion.id %}"
+            class="boton boton-generar"
+            onclick="return confirm(
+                '¿Estás seguro de que deseas generar los partidos? Esta acción no podrá repetirse.'
+            );"
+        >
+            Generar partidos
+        </a>
+
+    {% else %}
+
+        <a
+            href="{% url 'partidos_admin' configuracion.torneo.id %}"
+            class="boton boton-generar"
+        >
+            Ver partidos
+        </a>
+
+    {% endif %}
+
+</div>
+
+
+    </main>
+
+</div>
+
+
+</body>
+
+</html>
