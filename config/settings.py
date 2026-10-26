@@ -23,19 +23,81 @@ load_dotenv(BASE_DIR / ".env")
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-solo-desarrollo-local")
+
+# =========================================================
+# SEGURIDAD Y VARIABLES DE ENTORNO
+# =========================================================
+
+SECRET_KEY = os.getenv(
+    "SECRET_KEY",
+    "django-insecure-solo-desarrollo-local"
+)
 
 DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
+# Detectar el entorno de producción de Render.
+EN_RENDER = bool(os.getenv("RENDER"))
+
+if EN_RENDER:
+    if not os.getenv("SECRET_KEY"):
+        raise RuntimeError(
+            "Falta configurar SECRET_KEY en las variables de entorno."
+        )
+
+    if DEBUG:
+        raise RuntimeError(
+            "DEBUG debe ser False en producción."
+        )
+
 ALLOWED_HOSTS = [
     host.strip()
-    for host in os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+    for host in os.getenv(
+        "ALLOWED_HOSTS",
+        "localhost,127.0.0.1"
+    ).split(",")
     if host.strip()
 ]
 
 RENDER_EXTERNAL_HOSTNAME = os.getenv("RENDER_EXTERNAL_HOSTNAME")
+
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+# Evitar dominios repetidos.
+ALLOWED_HOSTS = list(dict.fromkeys(ALLOWED_HOSTS))
+
+# Orígenes autorizados para solicitudes protegidas por CSRF.
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv(
+        "CSRF_TRUSTED_ORIGINS",
+        ""
+    ).split(",")
+    if origin.strip()
+]
+
+if EN_RENDER and not CSRF_TRUSTED_ORIGINS:
+    raise RuntimeError(
+        "Configura CSRF_TRUSTED_ORIGINS con el dominio HTTPS de Render."
+    )
+
+# Refuerzo de seguridad únicamente en producción.
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+
+    X_FRAME_OPTIONS = "DENY"
+
+    # Render termina HTTPS en su proxy.
+    SECURE_PROXY_SSL_HEADER = (
+        "HTTP_X_FORWARDED_PROTO",
+        "https",
+    )
 
 
 # Application definition

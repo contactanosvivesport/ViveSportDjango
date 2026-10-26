@@ -1,3 +1,4 @@
+
 from django.contrib import admin
 from .models import Usuario
 
@@ -31,11 +32,13 @@ class UsuarioAdmin(admin.ModelAdmin):
 
     ordering = ("correo",)
 
+    # No mostrar ni editar el hash de la contraseña
+    exclude = ("password",)
+
     fieldsets = (
         ("Información de acceso", {
             "fields": (
                 "correo",
-                "password",
             )
         }),
 
